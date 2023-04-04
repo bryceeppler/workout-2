@@ -67,6 +67,15 @@ const Workout = () => {
       },
     ],
   };
+  
+  const completeWorkout = api.workouts.completeWorkout.useMutation({
+    onSuccess: () => {
+    //   utils.workouts.getIncompleteWorkouts
+    //   .invalidate()
+    //   .catch((err) => console.log(err));
+    // utils.users.getUserList.invalidate().catch((err) => console.log(err));
+    }
+  });
 
   if (!userLoaded) return <LoadingPage />;
 
@@ -124,11 +133,13 @@ const Workout = () => {
             {workoutLoading && <LoadingSpinner />}
             {data && (
               <div className="mt-5 flex flex-col gap-3">
-                <Link href="/"
-                                    className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
-
-                >Back</Link>
-                <h2 className="text-lg font-bold text-emerald-400">
+                <Link
+                  href="/"
+                  className="mr-auto rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
+                >
+                  Back
+                </Link>
+                <h2 className="text-2xl font-bold text-emerald-400">
                   {data.title}
                 </h2>
                 <div className="w-full space-y-1 whitespace-pre-wrap p-2 text-sm ">
@@ -144,11 +155,12 @@ const Workout = () => {
                   <div className="flex flex-col gap-3">
                     <PreviousWorkoutView workout={previousWorkoutData} />
                     <div>Select number of sets</div>
-                    <select onChange={handleNumSetsChange}>
+                    <select onChange={handleNumSetsChange} className="w-48 bg-black">
                       {[1, 2, 3, 4, 5, 6].map((num) => {
                         return <option value={num}>{num}</option>;
                       })}
                     </select>
+                    
                     {
                       // Use Array.from to create an array of the desired length, then map over it
                       Array.from({ length: numSets }).map((_, i) => (
@@ -166,18 +178,37 @@ const Workout = () => {
                   </div>
                   <button
                     type="submit"
-                    className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
+                    className="mt-5 rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
                   >
                     Save Changes
                   </button>
                 </form>
 
-                <div className="flex justify-center gap-3">
-                  <div className="rounded border border-neutral-400 bg-neutral-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-400">
+                <div className="flex justify-center gap-3 mb-20">
+                  <div className="rounded border border-neutral-400 bg-neutral-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-400"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      completeWorkout.mutate({ 
+                        userId: user.id,
+                        workoutId: Number(wid),
+                        status: "skipped",
+                      });
+                    }}
+                  >
                     Skip
                   </div>
 
-                  <div className="rounded border border-emerald-400 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-emerald-400">
+                  <div className="rounded border border-emerald-400 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-emerald-400"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      console.log("Complete Clicked");
+                      completeWorkout.mutate({ 
+                        userId: user.id,
+                        workoutId: Number(wid),
+                        status: "completed",
+                      });
+                    }}
+                  >
                     Complete
                   </div>
                 </div>

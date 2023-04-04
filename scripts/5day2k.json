@@ -1,0 +1,673 @@
+{
+  "legs": [
+    {
+      "workout": 1,
+      "exercises": [
+        {
+          "exercise": "lying leg curls",
+          "sets": "pyramid warmups then",
+          "reps": "4 X's 15-20"
+        },
+        {
+          "exercise": "leg press",
+          "sets": 5,
+          "reps": "15-25"
+        },
+        {
+          "exercise": "hack squats",
+          "sets": 3,
+          "reps": "12-15 reps"
+        },
+        {
+          "exercise": "Bulgarian Split Squats",
+          "sets": 3,
+          "reps": "12-15 each leg"
+        },
+        {
+          "exercise": "squats, or lunges",
+          "sets": 3,
+          "reps": "15"
+        },
+        {
+          "exercise": "leg extension",
+          "sets": 3,
+          "reps": "12-15"
+        }
+      ]
+    },
+    {
+      "workout": 2,
+      "exercises": [
+        {
+          "exercise": "leg extension",
+          "sets": "pyramid warmups then",
+          "reps": "2x8-10, 2x12-15, 2x15-25"
+        },
+        {
+          "exercise": "one legged press",
+          "sets": 5,
+          "reps": "15-25"
+        },
+        {
+          "exercise": "seated leg curls",
+          "sets": 3,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "leg 30's (see Youtube channel)",
+          "sets": "1 after warm up",
+          "reps": "30's as prescribed"
+        },
+        {
+          "exercise": "horizontal leg press, or lunges",
+          "sets": 3,
+          "reps": "15-20 reps"
+        }
+      ]
+    },
+    {
+      "workout": 3,
+      "exercises": [
+        {
+          "exercise": "hack squats or squats",
+          "sets": "pyramid warmups then",
+          "reps": "3x15-20"
+        },
+        {
+          "exercise": "one legged curls",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "leg press",
+          "sets": 3,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "one legged extension",
+          "sets": 3,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "Quad blasts (see Youtube channel)",
+          "sets": 2,
+          "reps": "as described"
+        }
+      ]
+    },
+    {
+      "workout": 4,
+      "exercises": [
+        {
+          "exercise": "BB Split Squat",
+          "sets": "pyramid warmups then",
+          "reps": "4 X's 15-20 each leg"
+        },
+        {
+          "exercise": "leg press/ superset squat jumps",
+          "sets": 4,
+          "reps": "15-20/ then 10"
+        },
+        {
+          "exercise": "squats, front or back, or DB",
+          "sets": 3,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "one legged curls",
+          "sets": 3,
+          "reps": "12-15, no lockouts at top"
+        },
+        {
+          "exercise": "lunges, alternating or single leg",
+          "sets": 4,
+          "reps": "15-20 each leg"
+        }
+      ]
+    }
+  ],
+  "chest": [
+    {
+      "workout": 1,
+      "exercises": [
+        {
+          "exercise": "incline barbell press",
+          "sets": 5,
+          "reps": "5 x 5"
+        },
+        {
+          "exercise": "incline DB press",
+          "sets": 4,
+          "reps": "8-12"
+        },
+        {
+          "exercise": "seated machine press",
+          "sets": 3,
+          "reps": "3 X's 15-20"
+        },
+        {
+          "exercise": "pec dec",
+          "sets": 5,
+          "reps": "15-20"
+        }
+      ]
+    },
+    {
+      "workout": 2,
+      "exercises": [
+        {
+          "exercise": "incline barbell press",
+          "sets": 5,
+          "reps": "3x6"
+        },
+        {
+          "exercise": "seated machine press",
+          "sets": 5,
+          "reps": "8-12"
+        },
+        {
+          "exercise": "incline DB press",
+          "sets": 4,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "flat flye",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "crossovers",
+          "sets": 4,
+          "reps": "15 slow, pumping"
+        }
+      ]
+    },
+    {
+      "workout": 3,
+      "exercises": [
+        {
+          "exercise": "flat DB press",
+          "sets": 5,
+          "reps": "4 x 6-8"
+        },
+        {
+          "exercise": "incline DB press",
+          "sets": 4,
+          "reps": "8-10"
+        },
+        {
+          "exercise": "seated flyes",
+          "sets": 4,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "incline machine press",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "seated machine press",
+          "sets": 3,
+          "reps": "12-15"
+        }
+      ]
+    },
+    {
+      "workout": 4,
+      "exercises": [
+        {
+          "exercise": "incline barbell press",
+          "sets": 5,
+          "reps": "5x8"
+        },
+        {
+          "exercise": "flat flye",
+          "sets": 4,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "seated machine press",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "flat DB press",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "pecdec or seated flye",
+          "sets": 3,
+          "reps": "15-20"
+        }
+      ]
+    }
+  ],
+  "back": [
+    {
+      "workout": 1,
+      "exercises": [
+        {
+          "exercise": "bent rows",
+          "sets": 5,
+          "reps": "8-10"
+        },
+        {
+          "exercise": "reverse grip pulldowns",
+          "sets": 4,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "seated cable rows",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "t-bar rows",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "machine assisted chin ups",
+          "sets": 3,
+          "reps": "15"
+        }
+      ]
+    },
+    {
+      "workout": 2,
+      "exercises": [
+        {
+          "exercise": "machine assisted chin ups",
+          "sets": 5,
+          "reps": "8-15"
+        },
+        {
+          "exercise": "one arm DB rows",
+          "sets": 4,
+          "reps": "8-15"
+        },
+        {
+          "exercise": "bent over barbell rows",
+          "sets": 4,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "reverse grip pulldowns",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "close grip pulldowns",
+          "sets": 3,
+          "reps": "15-20"
+        }
+      ]
+    },
+    {
+      "workout": 3,
+      "exercises": [
+        {
+          "exercise": "bent over rows",
+          "sets": 5,
+          "reps": "8-15"
+        },
+        {
+          "exercise": "seated cable rows",
+          "sets": 4,
+          "reps": "10-15"
+        },
+        {
+          "exercise": "t-bar rows",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "close grip pulldowns",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "straight arm pulldowns",
+          "sets": 3,
+          "reps": "15-20"
+        }
+      ]
+    },
+    {
+      "workout": 4,
+      "exercises": [
+        {
+          "exercise": "t-bar rows",
+          "sets": 5,
+          "reps": "8-12"
+        },
+        {
+          "exercise": "recline pull ups, feel elevated",
+          "sets": 4,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "seated cable rows",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "supported seated rows",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "DB Pullovers or Pullover Machine",
+          "sets": 3,
+          "reps": "15"
+        }
+      ]
+    }
+  ],
+  "shoulders": [
+    {
+      "workout": 1,
+      "exercises": [
+        {
+          "exercise": "machine shoulder press, any kind",
+          "sets": 5,
+          "reps": "8-15"
+        },
+        {
+          "exercise": "front alternate raises",
+          "sets": 4,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "one arm cable bent lateral",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "seated side laterals",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "rear delt machine",
+          "sets": 3,
+          "reps": "15"
+        }
+      ]
+    },
+    {
+      "workout": 2,
+      "exercises": [
+        {
+          "exercise": "seated side laterals",
+          "sets": "pyramid warmups then",
+          "reps": "4 X's 12-20"
+        },
+        {
+          "exercise": "rear delt machine",
+          "sets": 3,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "front alternate raises",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "side lateral throws",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "machine shoulder press, any kind",
+          "sets": 3,
+          "reps": "15"
+        }
+      ]
+    },
+    {
+      "workout": 3,
+      "exercises": [
+        {
+          "exercise": "DB bent laterals",
+          "sets": 5,
+          "reps": "10-15"
+        },
+        {
+          "exercise": "front alternate raises",
+          "sets": 4,
+          "reps": "8-10"
+        },
+        {
+          "exercise": "heavy 2 arm DB Swings",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "seated side laterals",
+          "sets": 3,
+          "reps": "15"
+        },
+        {
+          "exercise": "one arm cable side laterals",
+          "sets": 3,
+          "reps": "15"
+        }
+      ]
+    },
+    {
+      "workout": 4,
+      "exercises": [
+        {
+          "exercise": "one arm cable bent laterals",
+          "sets": 5,
+          "reps": "10-15"
+        },
+        {
+          "exercise": "cable side laterals, one arm",
+          "sets": 4,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "machine shoulder press, any kind",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "seated side laterals",
+          "sets": 3,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "overhead cable real delt",
+          "sets": 3,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "DB Shrugs",
+          "sets": 3,
+          "reps": "12-15"
+        }
+      ]
+    }
+  ],
+
+  "arms": [
+    {
+      "workout": 1,
+      "exercises": [
+        {
+          "exercise": "tricep pushdowns",
+          "sets": 4,
+          "reps": "4 X's 8-15"
+        },
+        {
+          "exercise": "low pulley one arm rope extension",
+          "sets": 4,
+          "reps": "10-15"
+        },
+        {
+          "exercise": "tricep machine extensions",
+          "sets": "1 warmup then",
+          "reps": "3 X's 15-20"
+        },
+        {
+          "exercise": "concentration DB curls",
+          "sets": 4,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "one arm machine curls",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "hammer preacher curls",
+          "sets": 3,
+          "reps": "10-15"
+        },
+        {
+          "exercise": "one arm zottman curls",
+          "sets": "2 - 3",
+          "reps": "10-15"
+        }
+      ]
+    },
+    {
+      "workout": 2,
+      "exercises": [
+        {
+          "exercise": "one arm machine curls",
+          "sets": 5,
+          "reps": "10-15"
+        },
+        {
+          "exercise": "cable concentration curls",
+          "sets": 4,
+          "reps": "10-15"
+        },
+        {
+          "exercise": "hammer preacher curls",
+          "sets": 3,
+          "reps": "15"
+        },
+        {
+          "exercise": "alternate hammer curls",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "overhead rope extension",
+          "sets": 4,
+          "reps": "4 X's 15-20"
+        },
+        {
+          "exercise": "low pulley one arm rope extension",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "one arm pushdowns",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "machine tricep extension",
+          "sets": 3,
+          "reps": "12-15"
+        }
+      ]
+    },
+    {
+      "workout": 3,
+      "exercises": [
+        {
+          "exercise": "hammer preacher curls",
+          "sets": 4,
+          "reps": "6-12"
+        },
+        {
+          "exercise": "concentration DB curls",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "standing barbell curls (no pauses)",
+          "sets": 3,
+          "reps": "15-20"
+        },
+        {
+          "exercise": "cable concentration curls",
+          "sets": 3,
+          "reps": "15"
+        },
+        {
+          "exercise": "one arm overhead tricep extension",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "machine french press",
+          "sets": 4,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "machine tricep extension",
+          "sets": 4,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "low pulley one arm rope extension",
+          "sets": 3,
+          "reps": "15"
+        }
+      ]
+    },
+    {
+      "workout": 4,
+      "exercises": [
+        {
+          "exercise": "one arm reverse grip pushdowns",
+          "sets": 4,
+          "reps": "10-15"
+        },
+        {
+          "exercise": "machine french press",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "one arm overhead rope extension",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "one arm pushdowns",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "one arm machine curls",
+          "sets": "warmups then",
+          "reps": "1x6-8, 1x8-10, 2x10-12, 1x15+"
+        },
+        {
+          "exercise": "DB concentration curls",
+          "sets": 3,
+          "reps": "12-15"
+        },
+        {
+          "exercise": "one arm hammer curls",
+          "sets": 3,
+          "reps": "10-12"
+        },
+        {
+          "exercise": "standing barbell curls (optional)",
+          "sets": 2,
+          "reps": "15"
+        }
+      ]
+    }
+  ]
+}

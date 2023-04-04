@@ -23,6 +23,8 @@ model CompletedWorkout {
     id          Int @id @default(autoincrement())
     createdAt   DateTime @default(now())
     workout     Workout  @relation(fields: [workoutId], references: [id])
+    // status = "skipped" or "completed"
+    status     String  @db.VarChar
     workoutId   Int 
     authorId    String
     @@index([authorId])

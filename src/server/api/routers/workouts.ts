@@ -44,4 +44,59 @@ export const workoutsRouter = createTRPCRouter({
     return workout;
   }
   ),
+  completeWorkout: publicProcedure.input(z.object({ userId: z.string(), workoutId: z.number(), status: z.string() })).mutation(async ({ ctx, input }) => {
+    try {
+      // if there is already a completedWorkout for this user and workout, update it
+      const existingCompletedWorkout = await ctx.prisma.completedWorkout.findFirst({
+        where: {
+          authorId: input.userId,
+          workoutId: input.workoutId,
+        },
+      });
+
+      if (existingCompletedWorkout) {
+        await ctx.prisma.completedWorkout.update({
+          where: {
+            id: existingCompletedWorkout.id,
+          },
+          data: {
+            status: input.status,
+          },
+        });
+      } else {
+        await ctx.prisma.completedWorkout.create({
+          data: {
+            authorId: input.userId,
+            workoutId: input.workoutId,
+            status: input.status,
+          },
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+  }),
 });
+
+// completeWorkout: publicProcedure
+// // accept a workout id and user id and create a completedWorkout entry with the given status
+// // return the completedWorkout entry
+// .input(z.object({ id: z.number(), userId: z.number(), status: z.string(), title: z.string() }))
+// .mutation(async ({ ctx, input }) => {
+//   try {
+//     await ctx.prisma.completedWorkouts.create({
+//       data: {
+//         workoutId: input.id,
+//         userId: input.userId,
+//         status: input.status,
+//         title: input.title,
+//       },
+//     });
+//   }
+//   catch (err) {
+//     console.log(err);
+//   }
+
+// }
+// ),

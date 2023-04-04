@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+venv
+venv/
+
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
