@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -13,4 +14,24 @@ export const workoutsRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.workout.findMany();
   }),
+  getIncomplete: publicProcedure.input(z.object({ userId: z.string() })).query(async ({ ctx, input }) => {
+    // const user = await clerkClient.users.getUser(input.userId);
+
+    const workouts = await ctx.prisma.workout.findMany({
+        // We want all workouts where this user there is no CompletedWorkout for this user
+        // CompletedWorkout is a relationship for users to workouts
+        take: 4,
+        where: {
+            completedWorkouts: {
+                none: {
+                    authorId: input.userId
+                }
+            }
+        }
+    });
+
+
+
+    return workouts;
+    }),
 });
