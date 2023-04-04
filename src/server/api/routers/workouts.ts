@@ -34,4 +34,14 @@ export const workoutsRouter = createTRPCRouter({
 
     return workouts;
     }),
+  get: publicProcedure.input(z.object({ id: z.number() })).query(async ({ ctx, input }) => {
+    const workout = await ctx.prisma.workout.findUnique({
+      where: {
+        id: input.id,
+      },
+    });
+
+    return workout;
+  }
+  ),
 });

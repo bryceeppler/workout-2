@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Workout {
-    id          String   @id @default(cuid())
+    id          Int @id @default(autoincrement())
     createdAt   DateTime @default(now())
     title       String
     workout_str String?  @db.VarChar
@@ -20,10 +20,10 @@ model Workout {
 }
 
 model CompletedWorkout {
-    id          String   @id @default(cuid())
+    id          Int @id @default(autoincrement())
     createdAt   DateTime @default(now())
     workout     Workout  @relation(fields: [workoutId], references: [id])
-    workoutId   String  @db.VarChar
+    workoutId   Int 
     authorId    String
     @@index([authorId])
 
