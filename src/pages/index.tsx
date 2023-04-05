@@ -1,7 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { SignOutButton, useUser } from "@clerk/nextjs";
-import { RouterOutputs, api } from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
+import {  api } from "~/utils/api";
 import Image from "next/image";
 import Link from "next/link";
 import LoadingPage from "~/components/loading";
@@ -91,7 +92,7 @@ const UserHeatmap: React.FC<UserHeatmapProps> = ({ userId, points }) => {
             content={`${userPoints} points on ${dateString}`}
           >
             <div
-              className={`h-4 w-4 ${bgColor} ${border} ${hover} rounded`}
+              className={`h-4 w-4 ${bgColor || ""} ${border || ""} ${hover || ""} rounded`}
             ></div>
           </Tooltip>
         );
@@ -111,8 +112,8 @@ const ActivityModal = ({
   userId,
 }: ActivityModalProps) => {
   const utils = api.useContext();
-  const [selectedActivity, setSelectedActivity] = useState<String>("meal");
-  const [activityValue, setActivityValue] = useState<Number>(0);
+  const [selectedActivity, setSelectedActivity] = useState<string>("meal");
+  const [activityValue, setActivityValue] = useState<number>(0);
   const addActivity = api.activities.addActivity.useMutation({
     onSuccess: () => {
       utils.users.getPoints.invalidate();
