@@ -40,6 +40,10 @@ function preprocessActivities(activities: Activity[]) {
   return combinedActivities;
 }
 
+function calculatePoints() {
+ return {} as Points; 
+}
+
 function filterUserData(users: User[]) {
 
     return users.map((user) => {
@@ -168,4 +172,10 @@ export const usersRouter = createTRPCRouter({
       return filterUserData([user])[0];
     }
   ),
+
+  // getUserSpiderChart: publicProcedure
+  //   .input(z.object({ userId: z.string() }))
+  //   .query(async ({ ctx, input }) => {
+  //     // same at getPoints
+      
 });
