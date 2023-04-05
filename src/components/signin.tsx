@@ -1,4 +1,4 @@
-import { SignInButton } from "@clerk/nextjs";type Props = {}
+import { SignInButton } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (

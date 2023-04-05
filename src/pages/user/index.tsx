@@ -1,8 +1,7 @@
 import React from 'react'
 
-type Props = {}
 
-export default function UserIndex({}: Props) {
+export default function UserIndex() {
   return (
     <div>index</div>
   )
