@@ -30,7 +30,7 @@ const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
       onMouseLeave={() => setShowTooltip(false)}
     >
       {showTooltip && (
-        <div className="absolute top-0 left-0 mt-8 ml-4 bg-neutral-700 text-white text-xs rounded py-1 px-2 shadow">
+        <div className="absolute left-0 top-0 ml-4 mt-8 w-24 rounded bg-neutral-700 px-2 py-1 text-xs text-white shadow">
           {content}
         </div>
       )}
@@ -52,12 +52,11 @@ function getLast14Days(): Date[] {
   return dates;
 }
 
-
 const UserHeatmap: React.FC<UserHeatmapProps> = ({ userId, points }) => {
   const last14Days = getLast14Days();
 
   return (
-    <div className="grid grid-cols-7 gap-1 w-fit">
+    <div className="grid w-fit grid-cols-7 gap-1">
       {last14Days.reverse().map((date, index) => {
         const dateString = getDateString(date);
         const userPoints = points[dateString]?.[userId] || 0;
@@ -68,17 +67,17 @@ const UserHeatmap: React.FC<UserHeatmapProps> = ({ userId, points }) => {
           case 1:
             bgColor = "bg-emerald-300";
             // border = "border border-neutral-400"
-            hover = "hover:border hover:border-neutral-400"
+            hover = "hover:border hover:border-neutral-400";
             break;
           case 2:
             bgColor = "bg-emerald-500";
             // border = "border border-neutral-400"
-            hover = "hover:border over:border-neutral-400"
+            hover = "hover:border over:border-neutral-400";
             break;
           case 3:
             bgColor = "bg-emerald-700";
             // border = "border border-neutral-400"
-            hover = "hover:border hover:border-neutral-400"
+            hover = "hover:border hover:border-neutral-400";
             break;
           default:
             bgColor = "bg-neutral-700";
@@ -92,7 +91,7 @@ const UserHeatmap: React.FC<UserHeatmapProps> = ({ userId, points }) => {
             content={`${userPoints} points on ${dateString}`}
           >
             <div
-              className={`w-4 h-4 ${bgColor} ${border} ${hover} rounded`}
+              className={`h-4 w-4 ${bgColor} ${border} ${hover} rounded`}
             ></div>
           </Tooltip>
         );
@@ -122,8 +121,8 @@ const ActivityModal = ({
     },
   });
   return (
-    <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm">
-      <div className="w-full rounded border border-neutral-700 bg-neutral-800 p-4 sm:max-w-md">
+    <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm z-20 ">
+      <div className="w-full rounded border border-neutral-700 bg-neutral-800 p-4 sm:max-w-md z-20">
         <div className="flex justify-between">
           <div className="text-lg font-bold">Add Activity</div>
           <CloseButton onClick={() => setModalOpen(false)} />
@@ -290,7 +289,7 @@ function getPointsForUser(userId: string, points: Points) {
   });
   return userpoints;
 }
-type PointsList = Points
+type PointsList = Points;
 const ProgressView = (props: { points: PointsList }) => {
   const users = Object.values(props.points)
     .flatMap((userPoints) => Object.keys(userPoints))
@@ -302,10 +301,10 @@ const ProgressView = (props: { points: PointsList }) => {
       <div className="rounded border border-neutral-600 p-4">
         {users.map((userId) => (
           <div key={userId} className="mb-4">
-            <div className="font-semibold">User {userId}</div>
-            <div className="text-sm text-neutral-400">{
-              getPointsForUser(userId, props.points)
-            } Points</div>
+            <div className="truncate font-semibold">User {userId}</div>
+            <div className="text-sm text-neutral-400">
+              {getPointsForUser(userId, props.points)} Points
+            </div>
             <UserHeatmap userId={userId} points={props.points} />
           </div>
         ))}
@@ -314,41 +313,23 @@ const ProgressView = (props: { points: PointsList }) => {
   );
 };
 
-
 import React from "react";
 
-
-
-const LeaderboardView = (props: {points: PointsList}) => {
-  const score1 = 18;
-  const score2 = 16;
-  const score3 = 14;
+const LeaderboardView = (props: { points: PointsList }) => {
   console.log(props.points);
-  
-  // [
-  //   {
-  //     "user.id": "1",
-  //     "totalPoints": 18
-  //   }
-  // ]
-  // get each unique user id and call getPointsForUser
-  let pointsArrToReturn = []
-
+  let pointsArrToReturn = [];
   let users = new Set();
-
   for (const [_, value] of Object.entries(props.points)) {
     console.log(value);
-    // now make a unique set of user ids
     for (const [userId, _] of Object.entries(value)) {
       users.add(userId);
     }
-
   }
   for (const userId of users) {
     pointsArrToReturn.push({
-      "userId": userId as string,
-      "totalPoints": getPointsForUser(userId as string, props.points)
-    })
+      userId: userId as string,
+      totalPoints: getPointsForUser(userId as string, props.points),
+    });
   }
   console.log(pointsArrToReturn);
 
@@ -363,32 +344,36 @@ const LeaderboardView = (props: {points: PointsList}) => {
   return (
     <div className="flex w-full flex-col text-left">
       <div className="my-2 text-lg font-bold text-white">Leaderboard</div>
-      {
-                  pointsArrToReturn.map((user) => (
-                    <div key={user.userId} className="flex h-12 w-full flex-row items-center rounded p-2 text-white">
-                      <img
-                        src={`https://robohash.org/${user.userId || "tempuser"}?set=set2`}
-                        className="mr-3 h-8 w-8 rounded-full bg-base"
-                      />
-                      <div className="flex w-full flex-col">
-                        <div>{user.userId}</div>
-                        {/* Black background bar */}
-                        <div className="flex h-2 w-full flex-row items-center rounded bg-black">
-                          {/* Green progress bar */}
-                          <div
-                            className="flex h-2 flex-row items-center rounded bg-green-500"
-                            style={{ width: `${(user.totalPoints / maxScore) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-      }
-
+      {pointsArrToReturn.map((user) => (
+        <div
+          key={user.userId}
+          className="flex h-12 w-full flex-row items-center rounded p-2 text-white"
+        >
+          <img
+            src={`https://robohash.org/${user.userId || "tempuser"}?set=set2`}
+            className="bg-base mr-3 h-8 w-8 rounded-full"
+          />
+          <div className="flex w-full flex-col">
+            <div
+              //  cap the user id at 20 chars
+              className="truncate text-sm font-semibold"
+            >
+              {user.userId}
+            </div>
+            {/* Black background bar */}
+            <div className="flex h-2 w-full flex-row items-center rounded bg-black">
+              {/* Green progress bar */}
+              <div
+                className="flex h-2 flex-row items-center rounded bg-green-500"
+                style={{ width: `${(user.totalPoints / maxScore) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
-}
-
+};
 
 const Home: NextPage = () => {
   const { user, isLoaded: userLoaded, isSignedIn } = useUser();
@@ -410,7 +395,7 @@ const Home: NextPage = () => {
   if (workoutsLoading) return <LoadingPage />;
 
   if (!data) return <div>Something went wrong</div>;
-      console.log(points)
+  console.log(points);
   return (
     <>
       <Head>
@@ -426,18 +411,16 @@ const Home: NextPage = () => {
             </div>
           </div>
           <UpcomingWorkoutsView workouts={data} />
-          {
-            !pointsLoading && points ? (<>
+          {!pointsLoading && points ? (
+            <>
               <ProgressView points={points} />
               <LeaderboardView points={points} />
-              </>
-            ) : (
-              <div className="mt-5 flex justify-center">
-                <LoadingSpinner />
-              </div>
-            )
-
-          }
+            </>
+          ) : (
+            <div className="mt-5 flex justify-center">
+              <LoadingSpinner />
+            </div>
+          )}
           <div className="mt-5 flex justify-center">
             <SignOutButton />
           </div>
