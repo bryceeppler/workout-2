@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
-import { Activity } from "@prisma/client";
+import { Activity, CompletedWorkout } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -40,8 +40,69 @@ function preprocessActivities(activities: Activity[]) {
   return combinedActivities;
 }
 
-function calculatePoints() {
- return {} as Points; 
+function calculatePoints(
+  users: User[],
+  completedWorkouts: CompletedWorkout[],
+  activities: Activity[]
+) {
+  const points = {} as Points;
+  users.forEach((user) => {
+    const userWorkouts = completedWorkouts.filter(
+      (workout) => workout.authorId === user.id
+    );
+    const userActivities = activities.filter(
+      (activity) => activity.authorId === user.id
+    );
+
+    userWorkouts.forEach((workout) => {
+      if (workout.status !== "completed") {
+        return;
+      }
+      const date = getDateString(workout.createdAt);
+      
+      if (!points[date]) {
+        points[date] = { [user.id]: 0 };
+      } else if (!points[date][user.id]) {
+        points[date][user.id] = 0;
+      }
+      
+      
+      // @ts-ignore
+      // if status is completed, add 1 point
+      points[date][user.id] += 1;
+    });
+
+    userActivities.forEach((activity) => {
+      const date = getDateString(activity.createdAt);
+      console.log(activity)
+
+      if (!points[date]) {
+        points[date] = { [user.id]: 0 };
+
+      } else if (!points[date][user.id]) {
+
+        points[date][user.id] = 0;
+      }
+
+      if (
+        (activity.type === "cardio" && activity.value >= 15) ||
+        (activity.type === "stretch" && activity.value >= 10) ||
+        (activity.type === "cold plunge" && activity.value > 0)
+      ) {
+
+        points[date][user.id] += 1;
+      } else if (activity.type === "meal") {
+        const mealCount = Math.min(Math.floor(activity.value / 3), 1);
+        
+        points[date][user.id] += mealCount;
+      }        
+
+      // Limit the points to a maximum of 3
+      // @ts-ignore
+      points[date][user.id] = Math.min(points[date][user.id], 3);
+    });
+  });
+ return points;
 }
 
 function filterUserData(users: User[]) {
@@ -95,65 +156,10 @@ export const usersRouter = createTRPCRouter({
     const completedWorkouts = await ctx.prisma.completedWorkout.findMany();
     const completedActivities = await ctx.prisma.activity.findMany();
     const combinedActivities = preprocessActivities(completedActivities);
-    const points = {} as Points;
+    const points = calculatePoints(users, completedWorkouts, combinedActivities);
   
 
-    users.forEach((user) => {
-      const userWorkouts = completedWorkouts.filter(
-        (workout) => workout.authorId === user.id
-      );
-      const userActivities = combinedActivities.filter(
-        (activity) => activity.authorId === user.id
-      );
-
-      userWorkouts.forEach((workout) => {
-        if (workout.status !== "completed") {
-          return;
-        }
-        const date = getDateString(workout.createdAt);
-        
-        if (!points[date]) {
-          points[date] = { [user.id]: 0 };
-        } else if (!points[date][user.id]) {
-          points[date][user.id] = 0;
-        }
-        
-        
-        // @ts-ignore
-        // if status is completed, add 1 point
-        points[date][user.id] += 1;
-      });
-
-      userActivities.forEach((activity) => {
-        const date = getDateString(activity.createdAt);
-        console.log(activity)
-
-        if (!points[date]) {
-          points[date] = { [user.id]: 0 };
-
-        } else if (!points[date][user.id]) {
-
-          points[date][user.id] = 0;
-        }
-
-        if (
-          (activity.type === "cardio" && activity.value >= 15) ||
-          (activity.type === "stretch" && activity.value >= 10) ||
-          (activity.type === "cold plunge" && activity.value > 0)
-        ) {
-
-          points[date][user.id] += 1;
-        } else if (activity.type === "meal") {
-          const mealCount = Math.min(Math.floor(activity.value / 3), 1);
-          
-          points[date][user.id] += mealCount;
-        }        
-
-        // Limit the points to a maximum of 3
-        // @ts-ignore
-        points[date][user.id] = Math.min(points[date][user.id], 3);
-      });
-    });
+  
 
     return points;
   }),
