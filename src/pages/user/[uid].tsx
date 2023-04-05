@@ -27,13 +27,13 @@ ChartJS.register(
 );
 
 const data = {
-  labels: ["Meals", "Cardio", "Cold Plunge", "Workout", "Stretching"],
+  labels: ['Meals', 'Stretch', 'Cardio', 'Workouts', 'Cold Plunge'],
   datasets: [
     {
-      label: "# of Points",
-      data: [4, 9, 3, 5, 16],
-      backgroundColor: "rgba(16 185 129, 0.2)",
-      borderColor: "rgba(16 185 129, 1)",
+      label: '# of Points',
+      data: [5, 9, 12, 6, 4],
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgba(255, 99, 132, 1)',
       borderWidth: 1,
     },
   ],
