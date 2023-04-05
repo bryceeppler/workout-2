@@ -34,14 +34,24 @@ export const workoutsRouter = createTRPCRouter({
 
     return workouts;
     }),
-  get: publicProcedure.input(z.object({ id: z.number() })).query(async ({ ctx, input }) => {
+  get: publicProcedure.input(z.object({ id: z.number(), userId: z.string() })).query(async ({ ctx, input }) => {
     const workout = await ctx.prisma.workout.findUnique({
       where: {
         id: input.id,
       },
     });
 
-    return workout;
+    const completedWorkout = await ctx.prisma.completedWorkout.findFirst({
+      where: {
+        authorId: input.userId,
+        workoutId: input.id,
+      },
+    });
+    return {
+      ...workout,
+      status: completedWorkout ? completedWorkout.status : null,
+      completedAt: completedWorkout ? completedWorkout.createdAt : null,
+    }
   }
   ),
   completeWorkout: publicProcedure.input(z.object({ userId: z.string(), workoutId: z.number(), status: z.string() })).mutation(async ({ ctx, input }) => {

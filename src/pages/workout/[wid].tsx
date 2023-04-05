@@ -1,11 +1,32 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
-import { RouterOutputs, api } from "~/utils/api";
+import { api } from "~/utils/api";
 import LoadingSpinner, { LoadingPage } from "~/components/loading";
 import SignInPage from "~/components/signin";
 import { useState } from "react";
 import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
+const previousWorkoutData = {
+  title: "Chest",
+  date: "2021-08-01",
+  exercise: "Barbell Bench Press",
+  sets: [
+    {
+      weight: 100,
+      reps: 10,
+    },
+    {
+      weight: 100,
+      reps: 10,
+    },
+    {
+      weight: 100,
+      reps: 10,
+    },
+  ],
+};
+const notifyComplete = () => toast.success("Workout saved!");
 const PreviousWorkoutView = (props: {
   workout: {
     title: string;
@@ -48,50 +69,32 @@ const Workout = () => {
   const router = useRouter();
   const { wid } = router.query;
   const { user, isLoaded: userLoaded, isSignedIn } = useUser();
-  const previousWorkoutData = {
-    title: "Chest",
-    date: "2021-08-01",
-    exercise: "Barbell Bench Press",
-    sets: [
-      {
-        weight: 100,
-        reps: 10,
-      },
-      {
-        weight: 100,
-        reps: 10,
-      },
-      {
-        weight: 100,
-        reps: 10,
-      },
-    ],
-  };
-  
+  const utils = api.useContext();
+
   const completeWorkout = api.workouts.completeWorkout.useMutation({
     onSuccess: () => {
-    //   utils.workouts.getIncompleteWorkouts
-    //   .invalidate()
-    //   .catch((err) => console.log(err));
-    // utils.users.getUserList.invalidate().catch((err) => console.log(err));
+      notifyComplete();
+      utils.workouts.get
+        .invalidate({ id: Number(wid), userId: user?.id ?? "" })
+        .catch((err) => console.log(err));
+    },
+  });
+
+  const { data, isLoading: workoutLoading } = api.workouts.get.useQuery(
+    {
+      id: Number(wid),
+      userId: user?.id ?? "",
+    },
+    {
+      enabled: userLoaded,
     }
-  });
-
-  if (!userLoaded) return <LoadingPage />;
-
-  // Return sign in page if user is not signed in
-  if (!isSignedIn) return <SignInPage />;
-
-  // wid is a string, but we need it to be a number
-  const { data, isLoading: workoutLoading } = api.workouts.get.useQuery({
-    id: Number(wid),
-  });
-  console.log(data);
+  );
 
   const [numSets, setNumSets] = useState(2);
   const handleNumSetsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNumSets(parseInt(e.target.value, 10));
   };
+
   const [setsValues, setSetsValues] = useState<number[]>(
     Array(numSets).fill(0)
   );
@@ -104,6 +107,10 @@ const Workout = () => {
     newSetsValues[index] = parseInt(e.target.value, 10);
     setSetsValues(newSetsValues);
   };
+
+  if (!userLoaded) return <LoadingPage />;
+
+  if (!isSignedIn) return <SignInPage />;
 
   return (
     <>
@@ -133,19 +140,21 @@ const Workout = () => {
             {workoutLoading && <LoadingSpinner />}
             {data && (
               <div className="mt-5 flex flex-col gap-3">
+                <div className="flex justify-between">
+                <h2 className="text-2xl font-bold text-emerald-400 font-">
+                  {data.title}
+                </h2>
                 <Link
                   href="/"
-                  className="mr-auto rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
+                  className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
                 >
                   Back
                 </Link>
-                <h2 className="text-2xl font-bold text-emerald-400">
-                  {data.title}
-                </h2>
+                </div>
                 <div className="w-full space-y-1 whitespace-pre-wrap p-2 text-sm ">
                   {<div>{data.workout_str}</div>}
                 </div>
-                <form
+                {/* <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     // Submit the setsValues to the API or database
@@ -155,12 +164,15 @@ const Workout = () => {
                   <div className="flex flex-col gap-3">
                     <PreviousWorkoutView workout={previousWorkoutData} />
                     <div>Select number of sets</div>
-                    <select onChange={handleNumSetsChange} className="w-48 bg-black">
+                    <select
+                      onChange={handleNumSetsChange}
+                      className="w-48 bg-black"
+                    >
                       {[1, 2, 3, 4, 5, 6].map((num) => {
                         return <option value={num}>{num}</option>;
                       })}
                     </select>
-                    
+
                     {
                       // Use Array.from to create an array of the desired length, then map over it
                       Array.from({ length: numSets }).map((_, i) => (
@@ -182,41 +194,62 @@ const Workout = () => {
                   >
                     Save Changes
                   </button>
-                </form>
+                </form> */}
 
-                <div className="flex justify-center gap-3 mb-20">
-                  <div className="rounded border border-neutral-400 bg-neutral-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-400"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      completeWorkout.mutate({ 
-                        userId: user.id,
-                        workoutId: Number(wid),
-                        status: "skipped",
-                      });
-                    }}
-                  >
-                    Skip
-                  </div>
-
-                  <div className="rounded border border-emerald-400 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-emerald-400"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      console.log("Complete Clicked");
-                      completeWorkout.mutate({ 
-                        userId: user.id,
-                        workoutId: Number(wid),
-                        status: "completed",
-                      });
-                    }}
-                  >
-                    Complete
-                  </div>
+                <div className="mb-20 flex justify-center gap-3">
+                  {data.status === null ? (
+                    <>
+                      {" "}
+                      <div
+                        className="rounded border border-neutral-400 bg-neutral-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-400"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          completeWorkout.mutate({
+                            userId: user.id,
+                            workoutId: Number(wid),
+                            status: "skipped",
+                          });
+                        }}
+                      >
+                        Skip
+                      </div>
+                      <div
+                        className="rounded border border-emerald-400 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-emerald-400"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          console.log("Complete Clicked");
+                          completeWorkout.mutate({
+                            userId: user.id,
+                            workoutId: Number(wid),
+                            status: "completed",
+                          });
+                        }}
+                      >
+                        Complete
+                      </div>
+                    </>
+                  ) : (
+                    <div>
+                      {data.status} on {data.completedAt?.toLocaleDateString()}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
         </div>
       </main>
+      <Toaster 
+      toastOptions={{
+        className: '',
+        style: {
+          color: 'white',
+          background: '#44403c',
+          border: '1px solid #10b981',
+
+        },
+      }}
+      />
     </>
   );
 };
