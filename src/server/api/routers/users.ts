@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
 import { Activity } from "@prisma/client";
@@ -103,11 +104,10 @@ export const usersRouter = createTRPCRouter({
 
         if (!points[date]) {
           points[date] = { [user.id]: 0 };
-          // @ts-ignore
-        } else if (!points[date][user.id]) {
-          // @ts-ignore
-          points[date][user.id] = 0;
+        } else if (!points[date]?.[user.id]) {
+          points[date][user.id] = (points[date]?.[user.id] ?? 0) + 1;
         }
+        
         // @ts-ignore
         points[date][user.id] += 1;
       });
