@@ -53,7 +53,7 @@ const PreviousWorkoutView = (props: {
       <div className="flex flex-col">
         {props.workout.sets.map((set, i) => {
           return (
-            <div className="flex justify-between">
+            <div key={i} className="flex justify-between">
               <div>Set {i + 1}</div>
               <div>
                 {set.weight} lbs x {set.reps}

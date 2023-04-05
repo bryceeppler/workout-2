@@ -116,7 +116,7 @@ const ActivityModal = ({
   const [activityValue, setActivityValue] = useState<number>(0);
   const addActivity = api.activities.addActivity.useMutation({
     onSuccess: () => {
-      utils.users.getPoints.invalidate();
+      utils.users.getPoints.invalidate().catch((err) => console.error(err));
       showToast();
       setModalOpen(false);
     },
@@ -321,8 +321,8 @@ import React from "react";
 import { User } from "@clerk/nextjs/dist/api";
 
 const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails}) => {
-  let pointsArrToReturn = [];
-  let users = new Set();
+  const pointsArrToReturn = [];
+  const users = new Set();
   for (const [_, value] of Object.entries(props.points)) {
     console.log(value);
     for (const [userId, _] of Object.entries(value)) {
