@@ -1,3 +1,4 @@
+import { User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 
@@ -32,6 +33,22 @@ function preprocessActivities(activities: any[]) {
   });
 
   return combinedActivities;
+}
+
+function filterUserData(users: User[]) {
+
+    return users.map((user) => {
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailAddresses: user.emailAddresses,
+        profileImageUrl: user.profileImageUrl,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        username: user.username,
+      };
+    })
 }
 export const usersRouter = createTRPCRouter({
   hello: publicProcedure
@@ -127,4 +144,19 @@ export const usersRouter = createTRPCRouter({
 
     return points;
   }),
+
+  getAllUserInfo: publicProcedure.query(async ({ ctx }) => {
+    const users = await clerkClient.users.getUserList();
+
+    return filterUserData(users);
+  }),
+
+  getUserInfo: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await clerkClient.users.getUser(input.userId);
+
+      return filterUserData([user])[0];
+    }
+  ),
 });

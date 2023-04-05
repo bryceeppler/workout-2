@@ -1,8 +1,8 @@
 import React from 'react'
 
-type Props = {}
+// type Props = {}
 
-export default function WorkoutIndex({}: Props) {
+export default function WorkoutIndex() {
   return (
     <div>index</div>
   )

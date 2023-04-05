@@ -1,8 +1,7 @@
 import React from 'react'
 
-type Props = {}
 
-export default function LoadingSpinner({}: Props) {
+export default function LoadingSpinner() {
   return (
     
 <div role="status">

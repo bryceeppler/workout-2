@@ -81,7 +81,7 @@ const UserHeatmap: React.FC<UserHeatmapProps> = ({ userId, points }) => {
             break;
           default:
             bgColor = "bg-neutral-700";
-            border = "border border-red-600";
+            border = "border border-neutral-600";
             hover = "hover:bg-red-900";
         }
 
@@ -134,7 +134,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "meal"
-                  ? "bg-emerald-500 text-neutral-200"
+                  ? "bg-emerald-500 text-neutral-200 hover:bg-emerald-600"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("meal")}
@@ -145,7 +145,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "cardio"
-                  ? "bg-emerald-500 text-neutral-200"
+                  ? "bg-emerald-500 text-neutral-200 hover:bg-emerald-600"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("cardio")}
@@ -157,7 +157,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "stretch"
-                  ? "bg-emerald-500 text-neutral-200"
+                  ? "bg-emerald-500 text-neutral-200 hover:bg-emerald-600"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("stretch")}
@@ -169,7 +169,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "cold plunge"
-                  ? "bg-emerald-500 text-neutral-200"
+                  ? "bg-emerald-500 text-neutral-200 hover:bg-emerald-600"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("cold plunge")}
@@ -290,18 +290,21 @@ function getPointsForUser(userId: string, points: Points) {
   return userpoints;
 }
 type PointsList = Points;
-const ProgressView = (props: { points: PointsList }) => {
+type UserDetails = RouterOutputs["users"]["getAllUserInfo"];
+const ProgressView = (props: { points: PointsList, usersDetails:UserDetails}) => {
   const users = Object.values(props.points)
     .flatMap((userPoints) => Object.keys(userPoints))
     .filter((userId, index, self) => self.indexOf(userId) === index);
-
+  
   return (
     <div className="mt-5 flex flex-col gap-3">
       <div className="text-lg font-bold">Progress</div>
       <div className="rounded border border-neutral-600 p-4">
         {users.map((userId) => (
           <div key={userId} className="mb-4">
-            <div className="truncate font-semibold">User {userId}</div>
+            <Link 
+              href={`/user/${userId}`}
+            className="truncate font-semibold hover:text-emerald-400">{props.usersDetails.find((user)=>user.id===userId)?.firstName}</Link>
             <div className="text-sm text-neutral-400">
               {getPointsForUser(userId, props.points)} Points
             </div>
@@ -314,9 +317,9 @@ const ProgressView = (props: { points: PointsList }) => {
 };
 
 import React from "react";
+import { User } from "@clerk/nextjs/dist/api";
 
-const LeaderboardView = (props: { points: PointsList }) => {
-  console.log(props.points);
+const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails}) => {
   let pointsArrToReturn = [];
   let users = new Set();
   for (const [_, value] of Object.entries(props.points)) {
@@ -342,15 +345,19 @@ const LeaderboardView = (props: { points: PointsList }) => {
   const maxScore = Math.max(...sortedUsers.map((user) => user.totalPoints));
 
   return (
-    <div className="flex w-full flex-col text-left">
-      <div className="my-2 text-lg font-bold text-white">Leaderboard</div>
+    <div className="mt-5 flex w-full flex-col text-left">
+      <div className="text-lg font-bold text-white">Leaderboard</div>
       {pointsArrToReturn.map((user) => (
-        <div
+        <Link
           key={user.userId}
-          className="flex h-12 w-full flex-row items-center rounded p-2 text-white"
+          className="flex h-12 w-full flex-row items-center rounded p-2 text-white hover:bg-black hover:border hover:border-emerald-500"
+          href={`/user/${user.userId}`}
         >
           <img
-            src={`https://robohash.org/${user.userId || "tempuser"}?set=set2`}
+            // src={`https://robohash.org/${user.userId || "tempuser"}?set=set2`}
+            src={
+              props.usersDetails.find((userDetails)=>userDetails.id===user.userId)?.profileImageUrl
+            }
             className="bg-base mr-3 h-8 w-8 rounded-full"
           />
           <div className="flex w-full flex-col">
@@ -358,7 +365,7 @@ const LeaderboardView = (props: { points: PointsList }) => {
               //  cap the user id at 20 chars
               className="truncate text-sm font-semibold"
             >
-              {user.userId}
+              {props.usersDetails.find((userDetails)=>userDetails.id===user.userId)?.firstName}
             </div>
             {/* Black background bar */}
             <div className="flex h-2 w-full flex-row items-center rounded bg-black">
@@ -369,7 +376,7 @@ const LeaderboardView = (props: { points: PointsList }) => {
               ></div>
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );
@@ -377,7 +384,7 @@ const LeaderboardView = (props: { points: PointsList }) => {
 
 const Home: NextPage = () => {
   const { user, isLoaded: userLoaded, isSignedIn } = useUser();
-
+  const {data: usersData, isLoading: usersLoading} = api.users.getAllUserInfo.useQuery();
   const { data: points, isLoading: pointsLoading } =
     api.users.getPoints.useQuery();
   const { data, isLoading: workoutsLoading } =
@@ -395,7 +402,7 @@ const Home: NextPage = () => {
   if (workoutsLoading) return <LoadingPage />;
 
   if (!data) return <div>Something went wrong</div>;
-  console.log(points);
+  console.log(usersData);
   return (
     <>
       <Head>
@@ -411,17 +418,17 @@ const Home: NextPage = () => {
             </div>
           </div>
           <UpcomingWorkoutsView workouts={data} />
-          {!pointsLoading && points ? (
+          {!pointsLoading && points && !usersLoading && usersData ? (
             <>
-              <ProgressView points={points} />
-              <LeaderboardView points={points} />
+              <ProgressView points={points} usersDetails={usersData}/>
+              <LeaderboardView points={points} usersDetails={usersData} />
             </>
           ) : (
             <div className="mt-5 flex justify-center">
               <LoadingSpinner />
             </div>
           )}
-          <div className="mt-5 flex justify-center">
+          <div className="mt-10 flex justify-center">
             <SignOutButton />
           </div>
         </div>
