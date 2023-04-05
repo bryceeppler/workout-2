@@ -9,18 +9,33 @@ import SignInPage from "~/components/signin";
 import { useState } from "react";
 import CloseButton from "~/components/closebutton";
 import { set } from "zod";
+import toast, { Toaster } from "react-hot-toast";
 // setModalOpen
 import { Dispatch, SetStateAction } from "react";
 
 interface ActivityModalProps {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
+  showToast: () => void;
+  userId: string;
 }
-const ActivityModal = ({ setModalOpen }: ActivityModalProps) => {
-  const [selectedActivity, setSelectedActivity] = useState<String | null>(null);
-  const [activityValue, setActivityValue] = useState<Number | null>(null);
+const ActivityModal = ({
+  setModalOpen,
+  showToast,
+  userId,
+}: ActivityModalProps) => {
+  const utils = api.useContext();
+  const [selectedActivity, setSelectedActivity] = useState<String>("meal");
+  const [activityValue, setActivityValue] = useState<Number>(0);
+  const addActivity = api.activities.addActivity.useMutation({
+    onSuccess: () => {
+      utils.users.getPoints.invalidate()
+      showToast();
+      setModalOpen(false);
+    },
+  });
   return (
     <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm">
-      <div className="w-full rounded bg-neutral-800 p-4 sm:max-w-md">
+      <div className="w-full rounded border border-neutral-700 bg-neutral-800 p-4 sm:max-w-md">
         <div className="flex justify-between">
           <div className="text-lg font-bold">Add Activity</div>
           <CloseButton onClick={() => setModalOpen(false)} />
@@ -87,7 +102,16 @@ const ActivityModal = ({ setModalOpen }: ActivityModalProps) => {
               onChange={(e) => setActivityValue(Number(e.target.value))}
             />
           </div>
-          <div className="mx-auto w-40 rounded border border-emerald-600 bg-emerald-500 px-4 py-2 text-center font-semibold text-neutral-200 shadow hover:bg-emerald-400">
+          <div
+            className="mx-auto w-40 cursor-pointer rounded border border-emerald-600 bg-emerald-500 px-4 py-2 text-center font-semibold text-neutral-200 shadow hover:bg-emerald-400"
+            onClick={() => {
+              addActivity.mutate({
+                activity: String(selectedActivity),
+                value: Number(activityValue),
+                userId: userId,
+              });
+            }}
+          >
             Submit
           </div>
         </div>
@@ -97,12 +121,28 @@ const ActivityModal = ({ setModalOpen }: ActivityModalProps) => {
 };
 const AddActivityWizard = () => {
   const { user } = useUser();
-  if (!user) return null;
   const [modalOpen, setModalOpen] = useState(false);
+  const showToast = () => {
+    toast("Activity added!", {
+      className: "",
+      style: {
+        color: "white",
+        background: "#44403c",
+        border: "1px solid #10b981",
+      },
+    });
+  };
+  if (!user) return null;
 
   return (
     <>
-      {modalOpen && <ActivityModal setModalOpen={setModalOpen} />}
+      {modalOpen && (
+        <ActivityModal
+          setModalOpen={setModalOpen}
+          showToast={showToast}
+          userId={user.id}
+        />
+      )}
       <div className="flex gap-3">
         <Image
           src={user.profileImageUrl}
@@ -115,7 +155,7 @@ const AddActivityWizard = () => {
         Add meal
       </div> */}
         <div
-          className="my-auto rounded border border-emerald-600 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow hover:bg-emerald-400"
+          className="my-auto cursor-pointer rounded border border-emerald-600 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow hover:bg-emerald-400"
           onClick={() => setModalOpen(true)}
         >
           Add activity
@@ -172,14 +212,18 @@ const LeaderboardView = () => {
 const Home: NextPage = () => {
   const { user, isLoaded: userLoaded, isSignedIn } = useUser();
 
-  if (!userLoaded) return <LoadingPage />;
+
+
+  const { data: points, isLoading: pointsLoaded } = api.users.getPoints.useQuery();
+  const { data, isLoading: workoutsLoaded } =
+    api.workouts.getIncomplete.useQuery({       userId: user?.id ?? "", },    {
+      enabled: userLoaded,
+    });
+
+    if (!userLoaded) return <LoadingPage />;
 
   // Return sign in page if user is not signed in
   if (!isSignedIn) return <SignInPage />;
-
-  const { data, isLoading: workoutsLoaded } =
-    api.workouts.getIncomplete.useQuery({ userId: user.id });
-
   if (workoutsLoaded) return <LoadingPage />;
 
   if (!data) return <div>Something went wrong</div>;
@@ -206,6 +250,16 @@ const Home: NextPage = () => {
           </div>
         </div>
       </main>
+      <Toaster
+        toastOptions={{
+          className: "",
+          style: {
+            color: "white",
+            background: "#44403c",
+            border: "1px solid #10b981",
+          },
+        }}
+      />
     </>
   );
 };

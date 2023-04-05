@@ -33,9 +33,8 @@ model CompletedWorkout {
 model Activity {
     id          Int @id @default(autoincrement())
     createdAt   DateTime @default(now())
-    title       String
     value Float
-    type        String?  @db.VarChar // "cold plunge" | "hot plunge" | "stretch" | "yoga" | "meditation" | "cardio" | "meals"
+    type        String  @db.VarChar // "cold plunge" | "hot plunge" | "stretch" | "yoga" | "meditation" | "cardio" | "meals"
     
     authorId    String
     @@index([authorId])

@@ -217,7 +217,6 @@ const Workout = () => {
                         className="rounded border border-emerald-400 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-emerald-400"
                         onClick={(e) => {
                           e.preventDefault();
-                          console.log("Complete Clicked");
                           completeWorkout.mutate({
                             userId: user.id,
                             workoutId: Number(wid),

@@ -20,7 +20,18 @@ export const activitiesRouter = createTRPCRouter({
     const completedActivities = await ctx.prisma.activity.findMany();
 
   }),
-
-
+  addActivity: publicProcedure.input(z.object({ userId: z.string(), activity: z.string(), value: z.number() })).mutation(async ({ ctx, input }) => {
+    try{
+    const activity = await ctx.prisma.activity.create({
+      data: {
+        authorId: input.userId,
+        type: input.activity,
+        value: input.value,
+      },
+    });
+  } catch (e) {
+    console.log(e);
+  }
+  }),
 });
 
