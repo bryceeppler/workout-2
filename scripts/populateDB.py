@@ -17,7 +17,11 @@ with open('5day2k.json') as f:
 workout_number = 1
 while workout_number < 9:
     for muscle_group, workouts in data.items():
-        title = f"{muscle_group} - {workouts[(workout_number - 1) % 4]['workout']}"
+        # title = f"{muscle_group} - {workouts[(workout_number - 1) % 4]['workout']}"
+        title = f"{muscle_group}"
+        # capitalize the first letter of each word
+        title = ' '.join([word[0].upper() + word[1:] for word in title.split(' ')])
+ 
         workout_str = ""
         for workout in workouts[(workout_number - 1) % 4]['exercises']:
             workout_str += f"""{workout['exercise']}
