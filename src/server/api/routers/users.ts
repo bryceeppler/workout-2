@@ -92,6 +92,7 @@ export const usersRouter = createTRPCRouter({
     const completedActivities = await ctx.prisma.activity.findMany();
     const combinedActivities = preprocessActivities(completedActivities);
     const points = {} as Points;
+  
 
     users.forEach((user) => {
       const userWorkouts = completedWorkouts.filter(
@@ -104,7 +105,7 @@ export const usersRouter = createTRPCRouter({
       userWorkouts.forEach((workout) => {
         const date = getDateString(workout.createdAt);
         console.log(date);
-
+        
         if (!points[date]) {
           points[date] = { [user.id]: 0 };
         } else if (!points[date][user.id]) {
