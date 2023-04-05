@@ -7,7 +7,37 @@ import SignInPage from "~/components/signin";
 import { useState } from "react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
+import {
+  Chart as ChartJS,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Radar } from "react-chartjs-2";
+ChartJS.register(
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+  Legend
+);
 
+const data = {
+  labels: ["Meals", "Cardio", "Cold Plunge", "Workout", "Stretching"],
+  datasets: [
+    {
+      label: "# of Points",
+      data: [4, 9, 3, 5, 16],
+      backgroundColor: "rgba(16 185 129, 0.2)",
+      borderColor: "rgba(16 185 129, 1)",
+      borderWidth: 1,
+    },
+  ],
+};
 const User = () => {
   const router = useRouter();
   const { uid } = router.query;
@@ -49,7 +79,7 @@ const User = () => {
           ) : (
             <div className="mt-5 flex flex-col gap-3">
               <div className="flex justify-between">
-                <h2 className="font- text-2xl font-bold text-emerald-400">
+                <h2 className="text-2xl font-bold text-emerald-400">
                   {userData?.firstName} {userData?.lastName}
                 </h2>
                 <Link
@@ -61,6 +91,40 @@ const User = () => {
               </div>
             </div>
           )}
+          <Radar
+            data={data}
+            options={{
+              responsive: true,
+              // change line color to white
+              scales: {
+                r: {
+                  pointLabels: {
+                    color: "white",
+                  },
+                  angleLines: {
+                    color: "gray",
+                  },
+                  grid: {
+                    color: "gray",
+                  },
+                  ticks: {
+                    // https://www.chartjs.org/docs/latest/axes/radial/#ticks
+                    color: "white",
+                    backdropColor: "transparent", // https://www.chartjs.org/docs/latest/axes/_common_ticks.html
+                  },
+                },
+              },
+              maintainAspectRatio: false,
+              color: "white",
+              plugins: {
+                legend: {
+                  labels: {
+                    color: "white",
+                  },
+                },
+              },
+            }}
+          />
         </div>
       </main>
       <Toaster
