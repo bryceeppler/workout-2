@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 import { User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
 import { Activity } from "@prisma/client";
@@ -9,11 +9,14 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 function getDateString(date: Date): string {
   return date.toISOString()?.split("T")[0] ?? "";
 }
-interface Points {
-  [date: string]: {
-    [userId: string]: number;
-  };
+interface UserPoints {
+  [userId: string]: number;
 }
+
+interface Points {
+  [date: string]: UserPoints;
+}
+
 // Pre-process function to combine entries with the same activity.type, activity.authorId, activity.createdAt date
 function preprocessActivities(activities: Activity[]) {
   const combinedActivities: Activity[] = [];
@@ -88,7 +91,7 @@ export const usersRouter = createTRPCRouter({
     const completedWorkouts = await ctx.prisma.completedWorkout.findMany();
     const completedActivities = await ctx.prisma.activity.findMany();
     const combinedActivities = preprocessActivities(completedActivities);
-    const points: Points = {};
+    const points = {} as Points;
 
     users.forEach((user) => {
       const userWorkouts = completedWorkouts.filter(
@@ -104,9 +107,10 @@ export const usersRouter = createTRPCRouter({
 
         if (!points[date]) {
           points[date] = { [user.id]: 0 };
-        } else if (!points[date]?.[user.id]) {
-          points[date][user.id] = (points[date]?.[user.id] ?? 0) + 1;
+        } else if (!points[date][user.id]) {
+          points[date][user.id] = 0;
         }
+        
         
         // @ts-ignore
         points[date][user.id] += 1;
@@ -118,9 +122,9 @@ export const usersRouter = createTRPCRouter({
 
         if (!points[date]) {
           points[date] = { [user.id]: 0 };
-          // @ts-ignore
+
         } else if (!points[date][user.id]) {
-          // @ts-ignore
+
           points[date][user.id] = 0;
         }
 
@@ -129,11 +133,11 @@ export const usersRouter = createTRPCRouter({
           (activity.type === "stretch" && activity.value >= 15) ||
           (activity.type === "cold plunge" && activity.value > 0)
         ) {
-          // @ts-ignore
+
           points[date][user.id] += 1;
         } else if (activity.type === "meal") {
           const mealCount = Math.min(Math.floor(activity.value / 3), 1);
-                    // @ts-ignore
+          
           points[date][user.id] += mealCount;
         }        
 
