@@ -1,5 +1,6 @@
 import { User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
+import { Activity } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -13,8 +14,8 @@ interface Points {
   };
 }
 // Pre-process function to combine entries with the same activity.type, activity.authorId, activity.createdAt date
-function preprocessActivities(activities: any[]) {
-  const combinedActivities: any[] = [];
+function preprocessActivities(activities: Activity[]) {
+  const combinedActivities: Activity[] = [];
 
   activities.forEach((activity) => {
     const date = getDateString(activity.createdAt);
@@ -86,7 +87,7 @@ export const usersRouter = createTRPCRouter({
     const completedWorkouts = await ctx.prisma.completedWorkout.findMany();
     const completedActivities = await ctx.prisma.activity.findMany();
     const combinedActivities = preprocessActivities(completedActivities);
-    let points: Points = {};
+    const points: Points = {};
 
     users.forEach((user) => {
       const userWorkouts = completedWorkouts.filter(
