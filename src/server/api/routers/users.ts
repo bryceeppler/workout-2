@@ -103,8 +103,10 @@ export const usersRouter = createTRPCRouter({
       );
 
       userWorkouts.forEach((workout) => {
+        if (workout.status !== "completed") {
+          return;
+        }
         const date = getDateString(workout.createdAt);
-        console.log(date);
         
         if (!points[date]) {
           points[date] = { [user.id]: 0 };
@@ -114,6 +116,7 @@ export const usersRouter = createTRPCRouter({
         
         
         // @ts-ignore
+        // if status is completed, add 1 point
         points[date][user.id] += 1;
       });
 

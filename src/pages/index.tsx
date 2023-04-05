@@ -53,37 +53,45 @@ function getLast14Days(): Date[] {
   return dates;
 }
 
-const UserHeatmap: React.FC<UserHeatmapProps> = ({ userId, points }) => {
+function sameDay(d1: Date, d2: Date): boolean {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+}
+
+const UserHeatmap = (props: { userId:string, points:PointsList, completedWorkouts:CompletedWorkouts }) => {
   const last14Days = getLast14Days();
 
   return (
     <div className="grid w-fit grid-cols-7 gap-1">
       {last14Days.reverse().map((date, index) => {
         const dateString = getDateString(date);
-        const userPoints = points[dateString]?.[userId] || 0;
+        // check if the user has a 'skipped' workout on this day
+        // createdAt == date && authorId == userId && status == 'skipped'
+        const skippedWorkout = props.completedWorkouts.find(
+          (workout) =>
+            sameDay(workout.createdAt, date ) &&
+            workout.authorId === props.userId &&
+            workout.status === "skipped"
+        );
+
+        const userPoints = props.points[dateString]?.[props.userId] || 0;
         let bgColor;
         let border;
-        let hover;
         switch (userPoints) {
           case 1:
-            bgColor = "bg-emerald-300";
-            // border = "border border-neutral-400"
-            hover = "hover:border hover:border-neutral-400";
+            bgColor = "bg-green-500 bg-opacity-50";
             break;
           case 2:
-            bgColor = "bg-emerald-500";
-            // border = "border border-neutral-400"
-            hover = "hover:border over:border-neutral-400";
+            bgColor = "bg-green-500 bg-opacity-75";
             break;
           case 3:
-            bgColor = "bg-emerald-700";
-            // border = "border border-neutral-400"
-            hover = "hover:border hover:border-neutral-400";
+            bgColor = "bg-green-500 ";
             break;
           default:
             bgColor = "bg-neutral-700";
-            border = "border border-neutral-600";
-            hover = "hover:bg-red-900";
         }
 
         return (
@@ -92,7 +100,9 @@ const UserHeatmap: React.FC<UserHeatmapProps> = ({ userId, points }) => {
             content={`${userPoints} points on ${dateString}`}
           >
             <div
-              className={`h-4 w-4 ${bgColor || ""} ${border || ""} ${hover || ""} rounded`}
+              className={` h-4 w-4 hover:border-2 hover:border-neutral-300 ${
+                skippedWorkout !== undefined ? "border-2 border-red-500 hover:border-red-700" : ""
+              } ${bgColor || ""} ${border || ""} rounded`}
             ></div>
           </Tooltip>
         );
@@ -292,7 +302,8 @@ function getPointsForUser(userId: string, points: Points) {
 }
 type PointsList = Points;
 type UserDetails = RouterOutputs["users"]["getAllUserInfo"];
-const ProgressView = (props: { points: PointsList, usersDetails:UserDetails}) => {
+type CompletedWorkouts = RouterOutputs["completedWorkouts"]["getAll"];
+const ProgressView = (props: { points: PointsList, usersDetails:UserDetails, completedWorkouts: CompletedWorkouts}) => {
   const users = Object.values(props.points)
     .flatMap((userPoints) => Object.keys(userPoints))
     .filter((userId, index, self) => self.indexOf(userId) === index);
@@ -309,7 +320,7 @@ const ProgressView = (props: { points: PointsList, usersDetails:UserDetails}) =>
             <div className="text-sm text-neutral-400">
               {getPointsForUser(userId, props.points)} Points
             </div>
-            <UserHeatmap userId={userId} points={props.points} />
+            <UserHeatmap userId={userId} points={props.points} completedWorkouts={props.completedWorkouts} />
           </div>
         ))}
       </div>
@@ -319,6 +330,7 @@ const ProgressView = (props: { points: PointsList, usersDetails:UserDetails}) =>
 
 import React from "react";
 import { User } from "@clerk/nextjs/dist/api";
+import { copyFile } from "fs";
 
 const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails}) => {
   const pointsArrToReturn = [];
@@ -395,6 +407,9 @@ const Home: NextPage = () => {
         enabled: userLoaded,
       }
     );
+    const { data: completedWorkouts, isLoading: completedWorkoutsLoading } = api.completedWorkouts.getAll.useQuery();
+
+
 
   if (!userLoaded) return <LoadingPage />;
 
@@ -419,9 +434,9 @@ const Home: NextPage = () => {
             </div>
           </div>
           <UpcomingWorkoutsView workouts={data} />
-          {!pointsLoading && points && !usersLoading && usersData ? (
+          {!pointsLoading && points && !usersLoading && usersData && !completedWorkoutsLoading && completedWorkouts ? (
             <>
-              <ProgressView points={points} usersDetails={usersData}/>
+              <ProgressView points={points} usersDetails={usersData} completedWorkouts={completedWorkouts}/>
               <LeaderboardView points={points} usersDetails={usersData} />
             </>
           ) : (
