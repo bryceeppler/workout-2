@@ -131,7 +131,7 @@ export const usersRouter = createTRPCRouter({
 
         if (
           (activity.type === "cardio" && activity.value >= 15) ||
-          (activity.type === "stretch" && activity.value >= 15) ||
+          (activity.type === "stretch" && activity.value > 10) ||
           (activity.type === "cold plunge" && activity.value > 0)
         ) {
 
