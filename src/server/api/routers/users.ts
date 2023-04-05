@@ -179,9 +179,54 @@ export const usersRouter = createTRPCRouter({
     }
   ),
 
-  // getUserSpiderChart: publicProcedure
-  //   .input(z.object({ userId: z.string() }))
-  //   .query(async ({ ctx, input }) => {
-  //     // same at getPoints
+  getUserSpiderChart: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // same at getPoints
+      const user = await clerkClient.users.getUser(input.userId);
+      const completedWorkouts = await ctx.prisma.completedWorkout.findMany();
+      const completedActivities = await ctx.prisma.activity.findMany();
+      const combinedActivities = preprocessActivities(completedActivities);
+      // labels: ['Meals', 'Stretch', 'Cardio', 'Workouts', 'Cold Plunge'],
+      //     label: '# of Points',
+      //     data: [5, 9, 12, 6, 4],
+      // build to data array and return it
+
+      const userWorkouts = completedWorkouts.filter(
+        (workout) => workout.authorId === user.id
+      );
+
+      const userActivities = combinedActivities.filter( 
+        (activity) => activity.authorId === user.id
+      );
+
+        let data = [0, 0, 0, 0, 0];
+      userWorkouts.forEach((workout) => {
+        if (workout.status !== "completed") {
+          return;
+        }
+        data[3] += 1;
+      });
+  
+      userActivities.forEach((activity) => {
+  
+        if (activity.type === "cardio " && activity.value >= 15) {
+          data[2] += 1;
+        }
+        if (activity.type === "stretch" && activity.value >= 10) {
+          data[1] += 1;
+        }
+        if (activity.type === "cold plunge" && activity.value > 0) {
+          data[4] += 1;
+        }
+        if (activity.type === "meal") {
+          const mealCount = Math.min(Math.floor(activity.value / 3), 1);
+          data[0] += mealCount;
+        }
+
+      });
+      
+      return data;
+    }),
       
 });

@@ -26,18 +26,7 @@ ChartJS.register(
   Legend
 );
 
-const data = {
-  labels: ['Meals', 'Stretch', 'Cardio', 'Workouts', 'Cold Plunge'],
-  datasets: [
-    {
-      label: '# of Points',
-      data: [5, 9, 12, 6, 4],
-      backgroundColor: 'rgba(255, 99, 132, 0.2)',
-      borderColor: 'rgba(255, 99, 132, 1)',
-      borderWidth: 1,
-    },
-  ],
-};
+
 const User = () => {
   const router = useRouter();
   const { uid } = router.query;
@@ -46,6 +35,20 @@ const User = () => {
   const { data: userData, isLoading: userDataLoading } =
     api.users.getUserInfo.useQuery({ userId: uid as string });
 
+    const { data: spiderChartData, isLoading: spiderChartLoading } = api.users.getUserSpiderChart.useQuery({ userId: uid as string });
+    
+    const data = {
+      labels: ['Meals', 'Stretch', 'Cardio', 'Workouts', 'Cold Plunge'],
+      datasets: [
+        {
+          label: '# of Points',
+          data: spiderChartData,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1,
+        },
+      ],
+    };
   if (!userLoaded) return <LoadingPage />;
 
   if (!isSignedIn) return <SignInPage />;
@@ -91,6 +94,9 @@ const User = () => {
               </div>
             </div>
           )}
+          {spiderChartLoading ? (
+            <LoadingSpinner />
+          ) : data && (
           <Radar
             data={data}
             options={{
@@ -125,6 +131,7 @@ const User = () => {
               },
             }}
           />
+          )}
         </div>
       </main>
       <Toaster
