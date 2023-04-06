@@ -333,8 +333,8 @@ const LeaderboardView = (props: {
 
   return (
     <div className="mt-5 flex w-full flex-col text-left">
-      <div className="text-lg font-bold text-white">Leaderboard</div>
-      <div className="flex flex-col gap-3">
+      <div className="text-xl font-bold text-white">Leaderboard</div>
+      <div className="flex flex-col gap-3 mt-3">
       {pointsArrToReturn.map((user) => (
         <Link
           key={user.userId}
