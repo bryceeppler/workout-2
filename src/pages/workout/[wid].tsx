@@ -127,21 +127,8 @@ const Workout = () => {
                 <SignInButton />
               </div>
             )}
-            {isSignedIn && (
-              <div className="flex w-full justify-between">
-                <div>
-                  <p>Workout: {wid}</p>
-                </div>
-                <SignOutButton />
-              </div>
-            )}
-          </div>
-          <div
-          className="mx-2">
-            {workoutLoading && <LoadingSpinner />}
-            {data && (
-              <div className="mt-5 flex flex-col gap-3">
-                <div className="flex justify-between items-center">
+            {isSignedIn && data && (
+                <div className="flex w-full justify-between items-center">
                 <h2 className="text-2xl font-bold text-emerald-400 font-">
                   {data.title}
                 </h2>
@@ -152,6 +139,14 @@ const Workout = () => {
                   Back
                 </Link>
                 </div>
+            )}
+          </div>
+          <div
+          className="mx-2">
+            {workoutLoading && <LoadingSpinner />}
+            {data && (
+              <div className="mt-5 flex flex-col gap-3">
+
                 <div className="w-full space-y-1 whitespace-pre-wrap p-2 text-sm ">
                   {<div>{data.workout_str}</div>}
                 </div>

@@ -80,8 +80,8 @@ const User = () => {
               </div>
             )}
             {isSignedIn && (
-              <div className="flex w-full justify-between">
-                  <h2 className="text-2xl font-bold text-emerald-400">
+              <div className="flex w-full justify-between items-center">
+                  <h2 className="text-2xl font-bold text-emerald-400 ">
                     {userData?.firstName} {userData?.lastName}
                   </h2>
                   <Link
