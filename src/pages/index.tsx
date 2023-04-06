@@ -13,7 +13,10 @@ import CloseButton from "~/components/closebutton";
 import toast, { Toaster } from "react-hot-toast";
 import { Dispatch, SetStateAction } from "react";
 import UserHeatmap from "~/components/userHeatmap";
-
+// import dayjs
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 export function getDateString(date: Date): string {
   return date.toISOString()?.split("T")[0] ?? "";
 }
@@ -437,7 +440,11 @@ const Home: NextPage = () => {
                        {feedItem.message}
                        </div>
                        <div className="text-xs text-neutral-400">
-                        7 hours ago
+                        {/* dayjs to say how long ago
+                         */}
+                         {
+                            dayjs(feedItem.date).fromNow()
+                         }
                         </div>
                       </div>
                   )
