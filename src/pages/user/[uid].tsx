@@ -5,6 +5,7 @@ import { api } from "~/utils/api";
 import LoadingSpinner, { LoadingPage } from "~/components/loading";
 import SignInPage from "~/components/signin";
 import { getPointsForUser } from "..";
+
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -18,6 +19,9 @@ import { Radar } from "react-chartjs-2";
 import UserHeatmap from "~/components/userHeatmap";
 import type { CompletedWorkouts } from "~/pages/index";
 import Link from "next/link";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -255,8 +259,8 @@ const User = () => {
                                   : " text-red-500"
                               }`}
                             >
-                              {workout.status} on{" "}
-                              {workout.createdAt.toLocaleDateString()}
+                              {workout.status}{" "} 
+                              {dayjs(workout.createdAt).fromNow()}
                             </div>
                           </div>
                         </Link>

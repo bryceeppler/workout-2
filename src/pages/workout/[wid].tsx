@@ -8,6 +8,9 @@ import { useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 const previousWorkoutData = {
   title: "Chest",
   date: "2021-08-01",
@@ -244,7 +247,7 @@ const Workout = () => {
                               {comment.authorName}
                             </Link>
                             <div className="text-sm">
-                              {comment.createdAt.toLocaleDateString()}
+                              {dayjs(comment.createdAt).fromNow()}
                             </div>
                           </div>
                           <div className="text-sm">{comment.content}</div>
