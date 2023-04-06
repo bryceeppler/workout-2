@@ -396,16 +396,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </main>
-      <Toaster
-        toastOptions={{
-          className: "",
-          style: {
-            color: "white",
-            background: "#44403c",
-            border: "1px solid #10b981",
-          },
-        }}
-      />
+
     </>
   );
 };

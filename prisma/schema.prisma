@@ -15,7 +15,7 @@ model Workout {
     createdAt   DateTime @default(now())
     title       String
     workout_str String?  @db.VarChar
-    
+    comments    WorkoutComment[]
     completedWorkouts CompletedWorkout[]
 }
 
@@ -40,13 +40,12 @@ model Activity {
     @@index([authorId])
 }
 
-model CompletedExercise {
+model WorkoutComment {
     id          Int @id @default(autoincrement())
     createdAt   DateTime @default(now())
-    name      String  @db.VarChar // "skipped" | "completed"
-    workoutId   Int
+    workout     Workout  @relation(fields: [workoutId], references: [id])
+    workoutId   Int 
     authorId    String
-    setsAndReps String?  @db.VarChar
-    notes String?  @db.VarChar
+    content     String
     @@index([authorId])
 }

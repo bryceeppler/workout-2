@@ -87,22 +87,43 @@ export const workoutsRouter = createTRPCRouter({
     }
 
   }),
-  addExercise: publicProcedure.input(z.object({ workoutId: z.number(), userId: z.string(), exerciseName: z.string(), setsAndReps: z.string(), notes: z.string()})).mutation(async ({ ctx, input }) => {
+
+  createComment: publicProcedure.input(z.object({ userId: z.string(), workoutId: z.number(), comment: z.string() })).mutation(async ({ ctx, input }) => {
     try {
-      await ctx.prisma.completedExercise.create({
+      await ctx.prisma.workoutComment.create({
         data: {
-          notes: input.notes,
           authorId: input.userId,
           workoutId: input.workoutId,
-          name: input.exerciseName,
-          setsAndReps: input.setsAndReps,
+          content: input.comment,
         },
       });
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
     }
-  }),
+  }
+  ),
+
+  fetchComments: publicProcedure.input(z.object({ workoutId: z.number() })).query(async ({ ctx, input }) => {
+    // we want to return the comment, but we also want to return the author instead of the author id and the user's profile image url.
+    const userList = await clerkClient.users.getUserList();
+    const comments = await ctx.prisma.workoutComment.findMany({
+      where: {
+        workoutId: input.workoutId,
+      },
+    });
+
+    const commentsWithAuthor = comments.map((comment) => {
+      const author = userList.find((user) => user.id === comment.authorId);
+      return {
+        ...comment,
+        authorName: author?.firstName + " " + author?.lastName,
+        authorImageUrl: author?.profileImageUrl,
+      };
+    });
+
+    return commentsWithAuthor;
+  }
+  ),
 });
 
 // completeWorkout: publicProcedure

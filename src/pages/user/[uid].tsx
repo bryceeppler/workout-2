@@ -84,12 +84,13 @@ const User = () => {
                   <h2 className="text-2xl font-bold text-emerald-400 ">
                     {userData?.firstName} {userData?.lastName}
                   </h2>
-                  <Link
-                    href="/"
+                  <button
+                  type="button"
+                  onClick={() => router.back()}
                     className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
                   >
                     Back
-                  </Link>
+                  </button>
               </div>
             )}
           </div>
@@ -152,16 +153,7 @@ const User = () => {
           </div>
         </div>
       </main>
-      <Toaster
-        toastOptions={{
-          className: "",
-          style: {
-            color: "white",
-            background: "#44403c",
-            border: "1px solid #10b981",
-          },
-        }}
-      />
+
     </>
   );
 };
