@@ -66,7 +66,7 @@ type ActivityModalProps = {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   showToast: () => void;
   userId: string;
-}
+};
 const ActivityModal = ({
   setModalOpen,
   showToast,
@@ -76,9 +76,12 @@ const ActivityModal = ({
   const [selectedActivity, setSelectedActivity] = useState<string>("meal");
   const [activityValue, setActivityValue] = useState<number>(0);
   const [activityStrValue, setActivityStrValue] = useState<string>("0");
-  const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setActivityStrValue(e.target.value.toString());
-  }, [activityValue]);
+  const handleBlur = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setActivityStrValue(e.target.value.toString());
+    },
+    [activityValue]
+  );
   const addActivity = api.activities.addActivity.useMutation({
     onSuccess: () => {
       utils.users.getPoints.invalidate().catch((err) => console.error(err));
@@ -91,19 +94,19 @@ const ActivityModal = ({
   });
   return (
     <div className="fixed left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm ">
-      <div className="z-20 w-full rounded border border-neutral-700 bg-neutral-800 p-4 sm:max-w-md">
+      <div className="z-20 w-full rounded border border-neutral-700 bg-neutral-900 p-4 sm:max-w-md">
         <div className="flex justify-between">
           <div className="text-lg font-bold">Add Activity</div>
           <CloseButton onClick={() => setModalOpen(false)} />
         </div>
-        <div className="flex flex-col gap-3">
-          <div className="text-sm font-bold">Activity</div>
+        <div className="mt-6 flex flex-col gap-3">
+          <div className="text-sm font-bold">Choose your activity</div>
 
-          <div className="flex flex-grow">
+          <div className="flex flex-grow gap-1">
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "meal"
-                  ? "bg-emerald-500 text-neutral-200 hover:bg-emerald-600"
+                  ? "bg-emerald-600 text-neutral-200 hover:bg-emerald-600"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("meal")}
@@ -114,7 +117,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "cardio"
-                  ? "bg-emerald-500 text-neutral-200 hover:bg-emerald-600"
+                  ? "bg-emerald-600 text-neutral-200 hover:bg-emerald-600"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("cardio")}
@@ -126,7 +129,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "stretch"
-                  ? "bg-emerald-500 text-neutral-200 hover:bg-emerald-600"
+                  ? "bg-emerald-600 text-neutral-200 hover:bg-emerald-600"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("stretch")}
@@ -138,7 +141,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "cold plunge"
-                  ? "bg-emerald-500 text-neutral-200 hover:bg-emerald-600"
+                  ? "bg-emerald-600 text-neutral-200 hover:bg-emerald-500"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("cold plunge")}
@@ -147,7 +150,7 @@ const ActivityModal = ({
             </div>
           </div>
 
-          <div className="text-sm font-bold">
+          <div className="mt-5 text-sm font-bold">
             {selectedActivity === "meal" ? "Number of meals" : "Minutes"}
           </div>
           <div className="">
@@ -157,13 +160,13 @@ const ActivityModal = ({
               value={activityStrValue === "0" ? "" : activityStrValue}
               onBlur={handleBlur}
               onChange={(e) => {
-                setActivityValue(Number(e.target.value))
-                setActivityStrValue(e.target.value)
+                setActivityValue(Number(e.target.value));
+                setActivityStrValue(e.target.value);
               }}
             />
           </div>
           <div
-            className="mx-auto w-40 cursor-pointer rounded border border-emerald-600 bg-emerald-500 px-4 py-2 text-center font-semibold text-neutral-200 shadow hover:bg-emerald-400"
+            className="mx-auto mt-5 w-36 cursor-pointer rounded border border-emerald-600 bg-emerald-600 px-4 py-2 text-center font-semibold text-neutral-200 shadow hover:bg-emerald-400"
             onClick={() => {
               addActivity.mutate({
                 activity: String(selectedActivity),
@@ -215,7 +218,7 @@ const AddActivityWizard = () => {
         Add meal
       </div> */}
         <div
-          className="my-auto cursor-pointer rounded border border-emerald-600 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow hover:bg-emerald-400"
+          className="my-auto cursor-pointer rounded border border-emerald-600 bg-emerald-600 px-4 py-2 font-semibold text-neutral-200 shadow hover:bg-emerald-400"
           onClick={() => setModalOpen(true)}
         >
           Add activity
