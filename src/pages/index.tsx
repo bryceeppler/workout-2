@@ -13,7 +13,7 @@ import CloseButton from "~/components/closebutton";
 import toast, { Toaster } from "react-hot-toast";
 import { Dispatch, SetStateAction } from "react";
 
-function getDateString(date: Date): string {
+export function getDateString(date: Date): string {
   return date.toISOString()?.split("T")[0] ?? "";
 }
 interface TooltipProps {
@@ -21,7 +21,7 @@ interface TooltipProps {
   children: React.ReactNode;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
+export const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -43,7 +43,7 @@ interface UserHeatmapProps {
   userId: string;
   points: PointsList;
 }
-function getLast14Days(): Date[] {
+export function getLast14Days(): Date[] {
   const dates: Date[] = [];
   for (let i = 0; i < 14; i++) {
     const date = new Date();
@@ -53,7 +53,7 @@ function getLast14Days(): Date[] {
   return dates;
 }
 
-function sameDay(d1: Date, d2: Date): boolean {
+export function sameDay(d1: Date, d2: Date): boolean {
   return (
     d1.getFullYear() === d2.getFullYear() &&
     d1.getMonth() === d2.getMonth() &&
@@ -300,9 +300,9 @@ function getPointsForUser(userId: string, points: Points) {
   });
   return userpoints;
 }
-type PointsList = Points;
-type UserDetails = RouterOutputs["users"]["getAllUserInfo"];
-type CompletedWorkouts = RouterOutputs["completedWorkouts"]["getAll"];
+export type PointsList = Points;
+export type UserDetails = RouterOutputs["users"]["getAllUserInfo"];
+export type CompletedWorkouts = RouterOutputs["completedWorkouts"]["getAll"];
 const ProgressView = (props: { points: PointsList, usersDetails:UserDetails, completedWorkouts: CompletedWorkouts}) => {
   const users = Object.values(props.points)
     .flatMap((userPoints) => Object.keys(userPoints))
