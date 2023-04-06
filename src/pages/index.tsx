@@ -1,3 +1,4 @@
+import React, { useCallback } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import { SignOutButton, useUser } from "@clerk/nextjs";
@@ -10,13 +11,14 @@ import LoadingSpinner from "~/components/loading";
 import SignInPage from "~/components/signin";
 import { useState } from "react";
 import CloseButton from "~/components/closebutton";
-import toast, { Toaster } from "react-hot-toast";
-import { Dispatch, SetStateAction } from "react";
+import toast from "react-hot-toast";
+import { type Dispatch, type SetStateAction } from "react";
 import UserHeatmap from "~/components/userHeatmap";
-// import dayjs
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+
 dayjs.extend(relativeTime);
+
 export function getDateString(date: Date): string {
   return date.toISOString()?.split("T")[0] ?? "";
 }
@@ -60,7 +62,7 @@ export function sameDay(d1: Date, d2: Date): boolean {
     d1.getDate() === d2.getDate()
   );
 }
-interface ActivityModalProps {
+type ActivityModalProps = {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   showToast: () => void;
   userId: string;
@@ -73,10 +75,16 @@ const ActivityModal = ({
   const utils = api.useContext();
   const [selectedActivity, setSelectedActivity] = useState<string>("meal");
   const [activityValue, setActivityValue] = useState<number>(0);
+  const [activityStrValue, setActivityStrValue] = useState<string>("0");
+  const handleBlur = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setActivityStrValue(e.target.value.toString());
+  }, [activityValue]);
   const addActivity = api.activities.addActivity.useMutation({
     onSuccess: () => {
       utils.users.getPoints.invalidate().catch((err) => console.error(err));
-      utils.users.getActivityFeed.invalidate().catch((err) => console.error(err));
+      utils.users.getActivityFeed
+        .invalidate()
+        .catch((err) => console.error(err));
       showToast();
       setModalOpen(false);
     },
@@ -146,8 +154,12 @@ const ActivityModal = ({
             <input
               type="number"
               className="w-full rounded border border-neutral-600 bg-black p-2 focus:border-emerald-500 focus:outline-none"
-              value={Number(activityValue)}
-              onChange={(e) => setActivityValue(Number(e.target.value))}
+              value={activityStrValue === "0" ? "" : activityStrValue}
+              onBlur={handleBlur}
+              onChange={(e) => {
+                setActivityValue(Number(e.target.value))
+                setActivityStrValue(e.target.value)
+              }}
             />
           </div>
           <div
@@ -293,10 +305,6 @@ const ProgressView = (props: {
   );
 };
 
-import React from "react";
-import { User } from "@clerk/nextjs/dist/api";
-import { copyFile } from "fs";
-
 const LeaderboardView = (props: {
   points: PointsList;
   usersDetails: UserDetails;
@@ -332,14 +340,17 @@ const LeaderboardView = (props: {
           className="flex h-12 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-emerald-500 hover:bg-black"
           href={`/user/${user.userId}`}
         >
-          <img
+          <Image
             // src={`https://robohash.org/${user.userId || "tempuser"}?set=set2`}
+            alt="Profile image"
             src={
               props.usersDetails.find(
                 (userDetails) => userDetails.id === user.userId
-              )?.profileImageUrl
+              )?.profileImageUrl || ""
             }
-            className="bg-base mr-3 h-8 w-8 rounded-full"
+            width={32}
+            height={32}
+            className="bg-base mr-3 rounded-full"
           />
           <div className="flex w-full flex-col">
             <div
@@ -380,8 +391,9 @@ const Home: NextPage = () => {
         enabled: userLoaded,
       }
     );
-    const { data: feedData, isLoading: feedLoading } = api.users.getActivityFeed.useQuery();
-    console.log(feedData)
+  const { data: feedData, isLoading: feedLoading } =
+    api.users.getActivityFeed.useQuery();
+  console.log(feedData);
   const { data: completedWorkouts, isLoading: completedWorkoutsLoading } =
     api.completedWorkouts.getAll.useQuery();
 
@@ -429,29 +441,23 @@ const Home: NextPage = () => {
             )}
             <div className="mt-5 flex flex-col gap-3">
               <div className="text-lg font-bold">Activity Feed</div>
-              {
-                !feedLoading && feedData && feedData.map((feedItem, i) => {
+              {!feedLoading &&
+                feedData &&
+                feedData.map((feedItem, i) => {
                   return (
-                    <div key={i}
-                      className="p-2 border border-neutral-600 rounded"
+                    <div
+                      key={i}
+                      className="rounded border border-neutral-600 p-2"
                     >
-                      <div
-                        className="text-sm"
-                      >
-                       {feedItem.message}
-                       </div>
-                       <div className="text-xs text-neutral-400">
+                      <div className="text-sm">{feedItem.message}</div>
+                      <div className="text-xs text-neutral-400">
                         {/* dayjs to say how long ago
                          */}
-                         {
-                            dayjs(feedItem.date).fromNow()
-                         }
-                        </div>
+                        {dayjs(feedItem.date).fromNow()}
                       </div>
-                  )
-                })
-                  
-              }
+                    </div>
+                  );
+                })}
             </div>
             <div className="mt-10 flex justify-center">
               <SignOutButton />
