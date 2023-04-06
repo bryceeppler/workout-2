@@ -6,14 +6,26 @@ type Props = {
     userId: string;
     points: PointsList;
     completedWorkouts: CompletedWorkouts;
+    weeks: number;
 }
-
-export default function UserHeatmap({userId, points, completedWorkouts}: Props) {
-        const last14Days = getLast14Days();
+export function getLastXDays(days:number): Date[] {
+  const dates: Date[] = [];
+  for (let i = 0; i < days; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    dates.push(date);
+  }
+  return dates;
+}
+export default function UserHeatmap({userId, points, completedWorkouts, weeks}: Props) {
+        let lastXDays = getLastXDays(weeks * 7);
+        if (weeks <= 2 ) {
+          lastXDays = lastXDays.reverse();
+        }
       
         return (
           <div className="grid w-fit grid-cols-7 gap-1">
-            {last14Days.reverse().map((date, index) => {
+            {lastXDays.map((date, index) => {
               const dateString = getDateString(date);
               // check if the user has a 'skipped' workout on this day
               // createdAt == date && authorId == userId && status == 'skipped'
@@ -42,16 +54,21 @@ export default function UserHeatmap({userId, points, completedWorkouts}: Props) 
               }
       
               return (
+                <>
                 <Tooltip
                   key={index}
                   content={`${userPoints} points on ${dateString}`}
+                  // put z index on tooltip to make sure it's on top of the heatmap
+                  
+                  
                 >
                   <div
-                    className={` h-4 w-4 hover:border-2 hover:border-neutral-300 ${
+                    className={` -z-40 h-4 w-4 hover:border-2 hover:border-neutral-300 ${
                       skippedWorkout !== undefined ? "border-2 border-red-500 hover:border-red-700" : ""
                     } ${bgColor || ""} ${border || ""} rounded`}
                   ></div>
                 </Tooltip>
+                </>
               );
             })}
           </div>

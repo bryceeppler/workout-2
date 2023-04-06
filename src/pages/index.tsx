@@ -12,6 +12,7 @@ import { useState } from "react";
 import CloseButton from "~/components/closebutton";
 import toast, { Toaster } from "react-hot-toast";
 import { Dispatch, SetStateAction } from "react";
+import UserHeatmap from "~/components/userHeatmap";
 
 export function getDateString(date: Date): string {
   return date.toISOString()?.split("T")[0] ?? "";
@@ -39,10 +40,6 @@ export const Tooltip: React.FC<TooltipProps> = ({ content, children }) => {
     </div>
   );
 };
-interface UserHeatmapProps {
-  userId: string;
-  points: PointsList;
-}
 export function getLast14Days(): Date[] {
   const dates: Date[] = [];
   for (let i = 0; i < 14; i++) {
@@ -60,57 +57,6 @@ export function sameDay(d1: Date, d2: Date): boolean {
     d1.getDate() === d2.getDate()
   );
 }
-
-const UserHeatmap = (props: { userId:string, points:PointsList, completedWorkouts:CompletedWorkouts }) => {
-  const last14Days = getLast14Days();
-
-  return (
-    <div className="grid w-fit grid-cols-7 gap-1">
-      {last14Days.reverse().map((date, index) => {
-        const dateString = getDateString(date);
-        // check if the user has a 'skipped' workout on this day
-        // createdAt == date && authorId == userId && status == 'skipped'
-        const skippedWorkout = props.completedWorkouts.find(
-          (workout) =>
-            sameDay(workout.createdAt, date ) &&
-            workout.authorId === props.userId &&
-            workout.status === "skipped"
-        );
-
-        const userPoints = props.points[dateString]?.[props.userId] || 0;
-        let bgColor;
-        let border;
-        switch (userPoints) {
-          case 1:
-            bgColor = "bg-green-500 bg-opacity-50";
-            break;
-          case 2:
-            bgColor = "bg-green-500 bg-opacity-75";
-            break;
-          case 3:
-            bgColor = "bg-green-500 ";
-            break;
-          default:
-            bgColor = "bg-neutral-700";
-        }
-
-        return (
-          <Tooltip
-            key={index}
-            content={`${userPoints} points on ${dateString}`}
-          >
-            <div
-              className={` h-4 w-4 hover:border-2 hover:border-neutral-300 ${
-                skippedWorkout !== undefined ? "border-2 border-red-500 hover:border-red-700" : ""
-              } ${bgColor || ""} ${border || ""} rounded`}
-            ></div>
-          </Tooltip>
-        );
-      })}
-    </div>
-  );
-};
-
 interface ActivityModalProps {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   showToast: () => void;
@@ -320,7 +266,7 @@ const ProgressView = (props: { points: PointsList, usersDetails:UserDetails, com
             <div className="text-sm text-neutral-400">
               {getPointsForUser(userId, props.points)} Points
             </div>
-            <UserHeatmap userId={userId} points={props.points} completedWorkouts={props.completedWorkouts} />
+            <UserHeatmap userId={userId} points={props.points} completedWorkouts={props.completedWorkouts} weeks={2}/>
           </div>
         ))}
       </div>

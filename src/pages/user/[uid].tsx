@@ -17,6 +17,7 @@ import {
   Legend,
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
+import UserHeatmap from "~/components/userHeatmap";
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -26,7 +27,6 @@ ChartJS.register(
   Legend
 );
 
-
 const User = () => {
   const router = useRouter();
   const { uid } = router.query;
@@ -35,20 +35,26 @@ const User = () => {
   const { data: userData, isLoading: userDataLoading } =
     api.users.getUserInfo.useQuery({ userId: uid as string });
 
-    const { data: spiderChartData, isLoading: spiderChartLoading } = api.users.getUserSpiderChart.useQuery({ userId: uid as string });
-    
-    const data = {
-      labels: ['Meals', 'Stretch', 'Cardio', 'Workouts', 'Cold Plunge'],
-      datasets: [
-        {
-          label: '# of Points',
-          data: spiderChartData,
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
-          borderWidth: 1,
-        },
-      ],
-    };
+  const { data: spiderChartData, isLoading: spiderChartLoading } =
+    api.users.getUserSpiderChart.useQuery({ userId: uid as string });
+  const { data: usersData, isLoading: usersLoading } =
+    api.users.getAllUserInfo.useQuery();
+  const { data: points, isLoading: pointsLoading } =
+    api.users.getPoints.useQuery();
+  const { data: completedWorkouts, isLoading: completedWorkoutsLoading } =
+    api.completedWorkouts.getAll.useQuery();
+  const data = {
+    labels: ["Meals", "Stretch", "Cardio", "Workouts", "Cold Plunge"],
+    datasets: [
+      {
+        label: "# of Points",
+        data: spiderChartData,
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
   if (!userLoaded) return <LoadingPage />;
 
   if (!isSignedIn) return <SignInPage />;
@@ -94,44 +100,65 @@ const User = () => {
               </div>
             </div>
           )}
+          <div
+            className="flex flex-col gap-3 mt-5"
+          >
+          {
+            points && completedWorkouts && (
+              <div
+                className="flex justify-center"
+              >
+              <UserHeatmap points={points}
+              completedWorkouts={completedWorkouts}
+              userId={user.id}
+              weeks={2}
+
+              /></div>
+            )
+          }
           {spiderChartLoading ? (
             <LoadingSpinner />
-          ) : data && (
-          <Radar
-            data={data}
-            options={{
-              responsive: true,
-              // change line color to white
-              scales: {
-                r: {
-                  pointLabels: {
-                    color: "white",
+          ) : (
+            data && (
+              <div
+                className="flex justify-center w-full h-64"
+              >
+              <Radar
+                data={data}
+                options={{
+                  responsive: true,
+                  // change line color to white
+                  scales: {
+                    r: {
+                      pointLabels: {
+                        color: "white",
+                      },
+                      angleLines: {
+                        color: "gray",
+                      },
+                      grid: {
+                        color: "gray",
+                      },
+                      ticks: {
+                        // https://www.chartjs.org/docs/latest/axes/radial/#ticks
+                        color: "white",
+                        backdropColor: "transparent", // https://www.chartjs.org/docs/latest/axes/_common_ticks.html
+                      },
+                    },
                   },
-                  angleLines: {
-                    color: "gray",
+                  maintainAspectRatio: false,
+                  color: "white",
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: "white",
+                      },
+                    },
                   },
-                  grid: {
-                    color: "gray",
-                  },
-                  ticks: {
-                    // https://www.chartjs.org/docs/latest/axes/radial/#ticks
-                    color: "white",
-                    backdropColor: "transparent", // https://www.chartjs.org/docs/latest/axes/_common_ticks.html
-                  },
-                },
-              },
-              maintainAspectRatio: false,
-              color: "white",
-              plugins: {
-                legend: {
-                  labels: {
-                    color: "white",
-                  },
-                },
-              },
-            }}
-          />
-          )}
+                }}
+              /></div>
+            )
+          )}</div>
         </div>
       </main>
       <Toaster
