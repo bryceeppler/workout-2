@@ -18,10 +18,8 @@ export function getLastXDays(days:number): Date[] {
   return dates;
 }
 export default function UserHeatmap({userId, points, completedWorkouts, weeks}: Props) {
-        let lastXDays = getLastXDays(weeks * 7);
-        if (weeks <= 2 ) {
-          lastXDays = lastXDays.reverse();
-        }
+        let lastXDays = getLastXDays(weeks * 7).reverse();
+
       
         return (
           <div className="grid w-fit grid-cols-7 gap-1">

@@ -96,6 +96,17 @@ const User = () => {
           </div>
           <div className="mx-2 flex flex-col">
             <div className="mt-5 flex flex-col gap-3">
+            
+                <div># Workouts Complete</div>
+                <div># Workouts Skipped</div>
+                <div>Time Submerged</div>
+                <div>Time Cardio</div>
+                <div>Time Stretching</div>
+                <div>Meals Tracked</div>
+                <div>Overkill</div>
+
+
+           
               {points && completedWorkouts && (
                 <div className="flex flex-col mx-auto justify-center">
                   <div className="text-white">{pointsForUser} points total</div>
@@ -103,7 +114,7 @@ const User = () => {
                     points={points}
                     completedWorkouts={completedWorkouts}
                     userId={uid as string}
-                    weeks={2}
+                    weeks={8}
                   />
                 </div>
               )}
@@ -147,8 +158,15 @@ const User = () => {
                       }}
                     />
                   </div>
+                
                 )
               )}
+              {/* Completed workout histroy */}
+              <div>
+                <h2 className="text-2xl font-bold text-emerald-400 ">
+                  History
+                </h2>
+              </div>
             </div>
           </div>
         </div>
