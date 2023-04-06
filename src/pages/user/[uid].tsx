@@ -130,7 +130,8 @@ const User = () => {
           <div className="mx-2 flex flex-col">
             <div className="mt-5 flex flex-col gap-3">
 
-              <div className="flex flex-col gap-2 mx-5 text-sm">
+              <div className="flex flex-col gap-2 mx-5 text-sm mb-5">
+                <div className="text-lg font-bold">{pointsForUser} total points</div>
                 <div className="flex justify-between">
                   <div>Workouts</div>
                   <div
@@ -221,7 +222,7 @@ const User = () => {
                 )
               )}
                             {points && completedWorkouts && (
-                <div className="mx-auto flex flex-col justify-center">
+                <div className="mx-auto flex flex-col justify-center my-5">
                   <div className="text-white">Last 4 Weeks</div>
                   <UserHeatmap
                     points={points}
@@ -233,7 +234,7 @@ const User = () => {
               )}
               {/* Completed workout histroy */}
               <div>
-                <h2 className="my-2 text-2xl font-bold text-emerald-400">
+                <h2 className="my-2 text-xl font-bold text-emerald-400">
                   History
                 </h2>
                 {
