@@ -17,7 +17,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         style: {
           color: 'white',
           background: '#44403c',
-          border: '1px solid #10b981',
+          border: '1px solid #8b5cf6',
 
         },
       }}

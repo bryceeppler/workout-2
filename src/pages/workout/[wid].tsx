@@ -30,7 +30,7 @@ const previousWorkoutData = {
     },
   ],
 };
-const notifyComplete = () => toast.success("Workout saved!");
+const notifyComplete = () => toast("Workout saved!");
 const PreviousWorkoutView = (props: {
   workout: {
     title: string;
@@ -130,13 +130,13 @@ const Workout = () => {
             )}
             {isSignedIn && data && (
               <div className="flex w-full items-center justify-between">
-                <h2 className="font- text-2xl font-bold text-emerald-400">
+                <h2 className="font- text-2xl font-bold text-violet-400">
                   {data.title}
                 </h2>
                 <button
                   type="button"
                   onClick={() => router.back()}
-                  className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
+                  className="rounded border border-violet-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
                 >
                   Back
                 </button>
@@ -167,7 +167,7 @@ const Workout = () => {
                     className="flex relative"
                   >
                     <div
-                      className="text-md flex h-6 w-6 content-center justify-center rounded-full bg-emerald-400 text-center "
+                      className="text-md flex h-6 w-6 content-center justify-center rounded-full bg-violet-400 text-center "
                       onMouseEnter={() => setTooltipVisible(true)}
                       onMouseLeave={() => setTooltipVisible(false)}
                     >
@@ -201,12 +201,12 @@ const Workout = () => {
                     onChange={(e) => {
                       setComment(e.target.value);
                     }}
-                    className="grow rounded border border-neutral-700 bg-transparent p-1 text-sm outline-none focus:border-emerald-500"
+                    className="grow rounded border border-neutral-700 bg-transparent p-1 text-sm outline-none focus:border-violet-500"
                   ></textarea>
                 </div>
                 <div className="flex w-full justify-end p-4">
                   <div
-                    className="rounded border border-emerald-400 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-emerald-400"
+                    className="rounded border border-violet-400 bg-violet-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-violet-400"
                     onClick={(e) => {
                       e.preventDefault();
                       createComment.mutate({
@@ -276,7 +276,7 @@ const Workout = () => {
                         Skip
                       </div>
                       <div
-                        className="rounded border border-emerald-400 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-emerald-400"
+                        className="rounded border border-violet-400 bg-violet-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-violet-400"
                         onClick={(e) => {
                           e.preventDefault();
                           completeWorkout.mutate({

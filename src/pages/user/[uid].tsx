@@ -118,13 +118,13 @@ const User = () => {
             )}
             {isSignedIn && (
               <div className="flex w-full items-center justify-between">
-                <h2 className="text-2xl font-bold text-emerald-400 ">
+                <h2 className="text-2xl font-bold text-violet-400 ">
                   {userData?.firstName} {userData?.lastName}
                 </h2>
                 <button
                   type="button"
                   onClick={() => router.back()}
-                  className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
+                  className="rounded border border-violet-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
                 >
                   Back
                 </button>
@@ -139,41 +139,41 @@ const User = () => {
                 </div>
                 <div className="flex justify-between">
                   <div>Workouts</div>
-                  <div className="font-bold text-emerald-300">
+                  <div className="font-bold text-violet-300">
                     {numCompletedWorkouts || 0}
                   </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Skipped</div>
-                  <div className="font-bold text-emerald-300">
+                  <div className="font-bold text-violet-300">
                     {numSkippedWorkouts}
                   </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Meals Tracked</div>
-                  <div className="font-bold text-emerald-300">
+                  <div className="font-bold text-violet-300">
                     {mealsTracked}
                   </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Mins Stretching</div>
-                  <div className="font-bold text-emerald-300">
+                  <div className="font-bold text-violet-300">
                     {minsStretching}
                   </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Mins Cardio</div>
-                  <div className="font-bold text-emerald-300">{minsCardio}</div>
+                  <div className="font-bold text-violet-300">{minsCardio}</div>
                 </div>
                 <div className="flex justify-between">
                   <div>Mins Submerged</div>
-                  <div className="font-bold text-emerald-300">
+                  <div className="font-bold text-violet-300">
                     {minsSubmerged}
                   </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Overkill Points</div>
-                  <div className="font-bold text-emerald-300">0</div>
+                  <div className="font-bold text-violet-300">0</div>
                 </div>
               </div>
 
@@ -232,7 +232,7 @@ const User = () => {
               )}
               {/* Completed workout histroy */}
               <div>
-                <h2 className="my-2 text-xl font-bold text-emerald-400">
+                <h2 className="my-2 text-xl font-bold text-violet-400">
                   History
                 </h2>
                 {
@@ -249,7 +249,7 @@ const User = () => {
                             <div
                               className={`text-xs ${
                                 workout.status === "completed"
-                                  ? "text-emerald-400"
+                                  ? "text-violet-400"
                                   : " text-red-500"
                               }`}
                             >

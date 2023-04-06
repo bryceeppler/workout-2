@@ -37,13 +37,13 @@ export default function WorkoutIndex() {
             )}
             {isSignedIn && (
               <div className="flex w-full items-center justify-between">
-                <h2 className="font- text-2xl font-bold text-emerald-400">
+                <h2 className="font- text-2xl font-bold text-violet-400">
                  All Workouts
                 </h2>
                 <button
                   type="button"
                   onClick={() => router.back()}
-                  className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
+                  className="rounded border border-violet-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
                 >
                   Back
                 </button>

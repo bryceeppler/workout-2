@@ -106,7 +106,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "meal"
-                  ? "bg-emerald-600 text-neutral-200 hover:bg-emerald-600"
+                  ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("meal")}
@@ -117,7 +117,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "cardio"
-                  ? "bg-emerald-600 text-neutral-200 hover:bg-emerald-600"
+                  ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("cardio")}
@@ -129,7 +129,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "stretch"
-                  ? "bg-emerald-600 text-neutral-200 hover:bg-emerald-600"
+                  ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("stretch")}
@@ -141,7 +141,7 @@ const ActivityModal = ({
             <div
               className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "cold plunge"
-                  ? "bg-emerald-600 text-neutral-200 hover:bg-emerald-500"
+                  ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
                   : "bg-neutral-800 text-neutral-400"
               }`}
               onClick={() => setSelectedActivity("cold plunge")}
@@ -156,7 +156,7 @@ const ActivityModal = ({
           <div className="">
             <input
               type="number"
-              className="w-full rounded border border-neutral-600 bg-black p-2 focus:border-emerald-500 focus:outline-none"
+              className="w-full rounded border border-neutral-600 bg-black p-2 focus:border-violet-500 focus:outline-none"
               value={activityStrValue === "0" ? "" : activityStrValue}
               onBlur={handleBlur}
               onChange={(e) => {
@@ -166,7 +166,7 @@ const ActivityModal = ({
             />
           </div>
           <div
-            className="mx-auto mt-5 w-36 cursor-pointer rounded border border-emerald-600 bg-emerald-600 px-4 py-2 text-center font-semibold text-neutral-200 shadow hover:bg-emerald-400"
+            className="mx-auto mt-5 w-36 cursor-pointer rounded bg-violet-500 px-4 py-2 text-center font-semibold text-neutral-200 shadow hover:bg-violet-400"
             onClick={() => {
               addActivity.mutate({
                 activity: String(selectedActivity),
@@ -214,11 +214,8 @@ const AddActivityWizard = () => {
           width={56}
           height={56}
         />
-        {/* <div className="my-auto rounded border border-emerald-600 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow hover:bg-emerald-400">
-        Add meal
-      </div> */}
         <div
-          className="my-auto cursor-pointer rounded border border-emerald-600 bg-emerald-600 px-4 py-2 font-semibold text-neutral-200 shadow hover:bg-emerald-400"
+          className="my-auto cursor-pointer rounded bg-violet-500 px-4 py-2 font-semibold text-neutral-200 shadow hover:bg-violet-400"
           onClick={() => setModalOpen(true)}
         >
           Add activity
@@ -249,7 +246,7 @@ const UpcomingWorkoutsView = (props: { workouts: Workout[] }) => {
       {workouts?.map((workout) => (
         <IncompleteWorkoutView key={workout.id} workout={workout} />
       ))}
-      <Link href="/workout" className="mx-auto cursor-pointer text-emerald-500 text-sm">
+      <Link href="/workout" className="mx-auto cursor-pointer text-violet-500 text-sm">
         View all workouts
       </Link>
     </div>
@@ -288,7 +285,7 @@ const ProgressView = (props: {
           <div key={userId} className="mb-4">
             <Link
               href={`/user/${userId}`}
-              className="truncate font-semibold hover:text-emerald-400"
+              className="truncate font-semibold hover:text-violet-400"
             >
               {props.usersDetails.find((user) => user.id === userId)?.firstName}
             </Link>
@@ -341,7 +338,7 @@ const LeaderboardView = (props: {
       {pointsArrToReturn.map((user) => (
         <Link
           key={user.userId}
-          className="flex h-16 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-emerald-500 hover:bg-black"
+          className="flex h-16 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-violet-500 hover:bg-black"
           href={`/user/${user.userId}`}
         >
           <Image
@@ -371,7 +368,7 @@ const LeaderboardView = (props: {
             <div className="flex h-4 w-full flex-row items-center rounded-full bg-black">
               {/* Green progress bar */}
               <div
-                className="flex h-4 flex-row items-center rounded-full bg-emerald-500"
+                className="flex h-4 flex-row items-center rounded-full bg-violet-500"
                 style={{ width: `${(user.totalPoints / maxScore) * 100}%` }}
               ></div>
             </div>
