@@ -116,7 +116,7 @@ export const workoutsRouter = createTRPCRouter({
       const author = userList.find((user) => user.id === comment.authorId);
       return {
         ...comment,
-        authorName: author?.firstName + " " + author?.lastName,
+        authorName: `${author?.firstName || ""} ${author?.lastName || ""}`,
         authorImageUrl: author?.profileImageUrl,
       };
     });

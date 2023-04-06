@@ -222,7 +222,7 @@ const Workout = () => {
                 <div className="flex flex-col gap-6">
                   {sortedComments?.map((comment) => {
                     return (
-                      <div className="flex gap-3">
+                      <div className="flex gap-3" key={comment.id}>
                         <Link
                           href={`/user/${comment.authorId}`}
                           className="h-10 w-10 rounded-full"
