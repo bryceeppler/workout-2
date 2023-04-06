@@ -39,3 +39,14 @@ model Activity {
     authorId    String
     @@index([authorId])
 }
+
+model CompletedExercise {
+    id          Int @id @default(autoincrement())
+    createdAt   DateTime @default(now())
+    name      String  @db.VarChar // "skipped" | "completed"
+    workoutId   Int
+    authorId    String
+    setsAndReps String?  @db.VarChar
+    notes String?  @db.VarChar
+    @@index([authorId])
+}

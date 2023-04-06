@@ -79,6 +79,15 @@ const Workout = () => {
         .catch((err) => console.log(err));
     },
   });
+  
+  const completeExercise = api.workouts.addExercise.useMutation({
+    onSuccess: () => {
+      notifyComplete();
+      // utils.workouts.get
+        // .invalidate({ id: Number(wid), userId: user?.id ?? "" })
+        // .catch((err) => console.log(err));
+    },
+  });
 
   const { data, isLoading: workoutLoading } = api.workouts.get.useQuery(
     {
@@ -91,6 +100,8 @@ const Workout = () => {
   );
 
   const [numSets, setNumSets] = useState(2);
+  const [notes, setNotes] = useState("");
+  const [repsValues, setRepsValues] = useState<number[]>(Array(numSets).fill(0));
   const handleNumSetsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setNumSets(parseInt(e.target.value, 10));
   };
@@ -106,6 +117,15 @@ const Workout = () => {
     const newSetsValues = [...setsValues];
     newSetsValues[index] = parseInt(e.target.value, 10);
     setSetsValues(newSetsValues);
+  };
+
+  const handleRepInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const newRepsValues = [...repsValues];
+    newRepsValues[index] = parseInt(e.target.value, 10);
+    setRepsValues(newRepsValues);
   };
 
   if (!userLoaded) return <LoadingPage />;
@@ -150,15 +170,26 @@ const Workout = () => {
                 <div className="w-full space-y-1 whitespace-pre-wrap p-2 text-sm ">
                   {<div>{data.workout_str}</div>}
                 </div>
-                {/* <form
+                <form
                   onSubmit={(e) => {
                     e.preventDefault();
+                    // console.log("Workout ID: ", wid);
+                    // console.log("User ID: ", user?.id);
+                    // console.log("Sets: ", setsValues);
+                    // console.log("Reps: ", repsValues);
+                    const setsAndRepsString = setsValues.map((set, i) => {
+                      return `${set}x${repsValues[i]}`;
+                    }).join(" ");
+                    if (setsAndRepsString === "") return;
+                    completeExercise.mutate({ workoutId: Number(wid), userId: user?.id ?? "", setsAndReps: setsAndRepsString, exerciseName: data.title || "", notes: notes  })
+
+                    // completeWorkout.mutate({ id: Number(wid), userId: user?.id ?? "" });
                     // Submit the setsValues to the API or database
                     // api.workouts.submit({ sets: setsValues });
                   }}
                 >
                   <div className="flex flex-col gap-3">
-                    <PreviousWorkoutView workout={previousWorkoutData} />
+                    {/* <PreviousWorkoutView workout={previousWorkoutData} /> */}
                     <div>Select number of sets</div>
                     <select
                       onChange={handleNumSetsChange}
@@ -174,15 +205,37 @@ const Workout = () => {
                       Array.from({ length: numSets }).map((_, i) => (
                         <div className="flex gap-3" key={i}>
                           <div>Set {i + 1}</div>
+                          <div>Weight</div>
                           <input
                             className="bg-black"
                             type="number"
                             name={`set${i + 1}`}
                             onChange={(e) => handleSetInputChange(e, i)}
                           />
+                          <div>Reps</div>
+                          <input
+                            className="bg-black"
+                            type="number"
+                            name={`set${i + 1}`}
+                            onChange={(e) => handleRepInputChange(e, i)}
+                          /> 
                         </div>
                       ))
                     }
+                  </div>
+                  <div className="my-4">
+                    {/* notes */}
+                    <div>Notes</div>
+                    <textarea
+                      className="bg-black w-full"
+                      name="notes"
+                      id="notes"
+                      cols={30}
+                      rows={10}
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                    ></textarea>
+
                   </div>
                   <button
                     type="submit"
@@ -190,7 +243,7 @@ const Workout = () => {
                   >
                     Save Changes
                   </button>
-                </form> */}
+                </form>
 
                 <div className="mb-20 flex justify-center gap-3">
                   {data.status === null ? (

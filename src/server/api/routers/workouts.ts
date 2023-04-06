@@ -87,6 +87,22 @@ export const workoutsRouter = createTRPCRouter({
     }
 
   }),
+  addExercise: publicProcedure.input(z.object({ workoutId: z.number(), userId: z.string(), exerciseName: z.string(), setsAndReps: z.string(), notes: z.string()})).mutation(async ({ ctx, input }) => {
+    try {
+      await ctx.prisma.completedExercise.create({
+        data: {
+          notes: input.notes,
+          authorId: input.userId,
+          workoutId: input.workoutId,
+          name: input.exerciseName,
+          setsAndReps: input.setsAndReps,
+        },
+      });
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }),
 });
 
 // completeWorkout: publicProcedure
