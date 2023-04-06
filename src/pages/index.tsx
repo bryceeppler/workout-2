@@ -282,7 +282,6 @@ const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails})
   const pointsArrToReturn = [];
   const users = new Set();
   for (const [_, value] of Object.entries(props.points)) {
-    console.log(value);
     for (const [userId, _] of Object.entries(value)) {
       users.add(userId);
     }
@@ -293,7 +292,6 @@ const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails})
       totalPoints: getPointsForUser(userId as string, props.points),
     });
   }
-  console.log(pointsArrToReturn);
 
   // order users by score
   const sortedUsers = pointsArrToReturn.sort(
@@ -364,7 +362,6 @@ const Home: NextPage = () => {
   if (workoutsLoading) return <LoadingPage />;
 
   if (!data) return <div>Something went wrong</div>;
-  console.log(usersData);
   return (
     <>
       <Head>
@@ -379,6 +376,9 @@ const Home: NextPage = () => {
               <AddActivityWizard />
             </div>
           </div>
+          <div
+            className="flex flex-col gap-3 mx-2"
+          >
           <UpcomingWorkoutsView workouts={data} />
           {!pointsLoading && points && !usersLoading && usersData && !completedWorkoutsLoading && completedWorkouts ? (
             <>
@@ -392,6 +392,7 @@ const Home: NextPage = () => {
           )}
           <div className="mt-10 flex justify-center">
             <SignOutButton />
+          </div>
           </div>
         </div>
       </main>

@@ -83,11 +83,14 @@ const User = () => {
               </div>
             )}
           </div>
+          <div
+            className="flex flex-col mx-2"
+          >
           {userDataLoading ? (
             <LoadingSpinner />
           ) : (
             <div className="mt-5 flex flex-col gap-3">
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-emerald-400">
                   {userData?.firstName} {userData?.lastName}
                 </h2>
@@ -159,6 +162,7 @@ const User = () => {
               /></div>
             )
           )}</div>
+          </div>
         </div>
       </main>
       <Toaster

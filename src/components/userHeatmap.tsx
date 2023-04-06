@@ -54,7 +54,7 @@ export default function UserHeatmap({userId, points, completedWorkouts, weeks}: 
               }
       
               return (
-                <>
+                <div key={index}>
                 <Tooltip
                   key={index}
                   content={`${userPoints} points on ${dateString}`}
@@ -68,7 +68,7 @@ export default function UserHeatmap({userId, points, completedWorkouts, weeks}: 
                     } ${bgColor || ""} ${border || ""} rounded`}
                   ></div>
                 </Tooltip>
-                </>
+                </div>
               );
             })}
           </div>

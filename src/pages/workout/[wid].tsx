@@ -136,11 +136,12 @@ const Workout = () => {
               </div>
             )}
           </div>
-          <div>
+          <div
+          className="mx-2">
             {workoutLoading && <LoadingSpinner />}
             {data && (
               <div className="mt-5 flex flex-col gap-3">
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-emerald-400 font-">
                   {data.title}
                 </h2>

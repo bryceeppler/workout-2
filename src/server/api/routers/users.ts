@@ -74,7 +74,6 @@ function calculatePoints(
 
     userActivities.forEach((activity) => {
       const date = getDateString(activity.createdAt);
-      console.log(activity)
 
       if (!points[date]) {
         points[date] = { [user.id]: 0 };
