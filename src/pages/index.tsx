@@ -434,7 +434,7 @@ const Home: NextPage = () => {
                       <div
                         className="text-sm"
                       >
-                       {feedItem.message!}
+                       {feedItem.message}
                        </div>
                        <div className="text-xs text-neutral-400">
                         7 hours ago
