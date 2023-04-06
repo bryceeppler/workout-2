@@ -196,7 +196,7 @@ const Workout = () => {
                       className="w-48 bg-black"
                     >
                       {[1, 2, 3, 4, 5, 6].map((num) => {
-                        return <option value={num}>{num}</option>;
+                        return <option key={num} value={num}>{num}</option>;
                       })}
                     </select>
 
