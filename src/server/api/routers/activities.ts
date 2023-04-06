@@ -33,5 +33,14 @@ export const activitiesRouter = createTRPCRouter({
     console.log(e);
   }
   }),
+  getByUser:  publicProcedure.input(z.object({ userId: z.string() })).query(async ({ ctx, input }) => {
+    const activities = await ctx.prisma.activity.findMany({
+      where: {
+        authorId: input.userId,
+      },
+    });
+    return activities;
+  }
+  ),
 });
 

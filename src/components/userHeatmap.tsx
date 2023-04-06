@@ -18,7 +18,7 @@ export function getLastXDays(days:number): Date[] {
   return dates;
 }
 export default function UserHeatmap({userId, points, completedWorkouts, weeks}: Props) {
-        let lastXDays = getLastXDays(weeks * 7).reverse();
+        const lastXDays = getLastXDays(weeks * 7).reverse();
 
       
         return (
@@ -61,7 +61,7 @@ export default function UserHeatmap({userId, points, completedWorkouts, weeks}: 
                   
                 >
                   <div
-                    className={` -z-40 h-4 w-4 hover:border-2 hover:border-neutral-300 ${
+                    className={` -z-40 h-6 w-6 hover:border-2 hover:border-neutral-300 ${
                       skippedWorkout !== undefined ? "border-2 border-red-500 hover:border-red-700" : ""
                     } ${bgColor || ""} ${border || ""} rounded`}
                   ></div>
