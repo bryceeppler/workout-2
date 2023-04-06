@@ -76,6 +76,7 @@ const ActivityModal = ({
   const addActivity = api.activities.addActivity.useMutation({
     onSuccess: () => {
       utils.users.getPoints.invalidate().catch((err) => console.error(err));
+      utils.users.getActivityFeed.invalidate().catch((err) => console.error(err));
       showToast();
       setModalOpen(false);
     },
