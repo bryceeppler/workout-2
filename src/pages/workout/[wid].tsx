@@ -204,17 +204,17 @@ const Workout = () => {
                       // Use Array.from to create an array of the desired length, then map over it
                       Array.from({ length: numSets }).map((_, i) => (
                         <div className="flex gap-3" key={i}>
-                          <div>Set {i + 1}</div>
+                          {/* <div>Set {i + 1}</div> */}
                           <div>Weight</div>
                           <input
-                            className="bg-black"
+                            className="bg-black w-16"
                             type="number"
                             name={`set${i + 1}`}
                             onChange={(e) => handleSetInputChange(e, i)}
                           />
                           <div>Reps</div>
                           <input
-                            className="bg-black"
+                            className="bg-black w-16"
                             type="number"
                             name={`set${i + 1}`}
                             onChange={(e) => handleRepInputChange(e, i)}
@@ -237,15 +237,17 @@ const Workout = () => {
                     ></textarea>
 
                   </div>
+                  <div className="flex justify-center">
                   <button
                     type="submit"
                     className="mt-5 rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
                   >
                     Save Changes
                   </button>
+                  </div>
                 </form>
 
-                <div className="mb-20 flex justify-center gap-3">
+                <div className="mb-20 mt-10 flex justify-center gap-3">
                   {data.status === null ? (
                     <>
                       {" "}
