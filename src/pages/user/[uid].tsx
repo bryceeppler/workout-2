@@ -131,7 +131,7 @@ const User = () => {
               </div>
             )}
           </div>
-          <div className="mx-2 flex flex-col">
+          <div className="mx-3 flex flex-col">
             <div className="mt-5 flex flex-col gap-3">
 
               <div className="flex flex-col gap-2 text-sm mb-5 w-full max-w-sm mx-auto">

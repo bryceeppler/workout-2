@@ -143,7 +143,7 @@ const Workout = () => {
               </div>
             )}
           </div>
-          <div className="mx-2">
+          <div className="mx-3">
             {workoutLoading && <LoadingSpinner />}
             {data && (
               <div className="mt-5 flex flex-col gap-3">

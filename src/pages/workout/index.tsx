@@ -51,7 +51,7 @@ export default function WorkoutIndex() {
             )}
           </div>
           <div
-          className="flex flex-col gap-3 mx-2 mt-2">
+          className="flex flex-col gap-3 mx-3 mt-2">
               {
                 allWorkouts?.map((workout) => {
                   return (

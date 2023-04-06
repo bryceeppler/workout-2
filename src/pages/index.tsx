@@ -93,10 +93,10 @@ const ActivityModal = ({
     },
   });
   return (
-    <div className="fixed left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm ">
+    <div className="fixed left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm p-2">
       <div className="z-20 w-full rounded border border-neutral-700 bg-neutral-900 p-4 sm:max-w-md">
         <div className="flex justify-between">
-          <div className="text-lg font-bold">Add Activity</div>
+          <div className="text-xl font-bold">Add Activity</div>
           <CloseButton onClick={() => setModalOpen(false)} />
         </div>
         <div className="mt-6 flex flex-col gap-3">
@@ -245,11 +245,11 @@ const UpcomingWorkoutsView = (props: { workouts: Workout[] }) => {
   const { workouts } = props;
   return (
     <div className="mt-5 flex flex-col gap-3">
-      <div className="text-lg font-bold">Upcoming Workouts</div>
+      <div className="text-xl font-bold">Upcoming Workouts</div>
       {workouts?.map((workout) => (
         <IncompleteWorkoutView key={workout.id} workout={workout} />
       ))}
-      <Link href="/workout" className="mx-auto cursor-pointer text-emerald-500">
+      <Link href="/workout" className="mx-auto cursor-pointer text-emerald-500 text-sm">
         View all workouts
       </Link>
     </div>
@@ -282,7 +282,7 @@ const ProgressView = (props: {
 
   return (
     <div className="mt-5 flex flex-col gap-3">
-      <div className="text-lg font-bold">Progress</div>
+      <div className="text-xl font-bold">Progress</div>
       <div className="rounded border border-neutral-600 p-4">
         {users.map((userId) => (
           <div key={userId} className="mb-4">
@@ -337,10 +337,11 @@ const LeaderboardView = (props: {
   return (
     <div className="mt-5 flex w-full flex-col text-left">
       <div className="text-lg font-bold text-white">Leaderboard</div>
+      <div className="flex flex-col gap-3">
       {pointsArrToReturn.map((user) => (
         <Link
           key={user.userId}
-          className="flex h-12 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-emerald-500 hover:bg-black"
+          className="flex h-16 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-emerald-500 hover:bg-black"
           href={`/user/${user.userId}`}
         >
           <Image
@@ -351,14 +352,14 @@ const LeaderboardView = (props: {
                 (userDetails) => userDetails.id === user.userId
               )?.profileImageUrl || ""
             }
-            width={32}
-            height={32}
+            width={46}
+            height={46}
             className="bg-base mr-3 rounded-full"
           />
           <div className="flex w-full flex-col">
             <div
               //  cap the user id at 20 chars
-              className="truncate text-sm font-semibold"
+              className="truncate font-semibold"
             >
               {
                 props.usersDetails.find(
@@ -367,16 +368,17 @@ const LeaderboardView = (props: {
               }
             </div>
             {/* Black background bar */}
-            <div className="flex h-2 w-full flex-row items-center rounded bg-black">
+            <div className="flex h-4 w-full flex-row items-center rounded-full bg-black">
               {/* Green progress bar */}
               <div
-                className="flex h-2 flex-row items-center rounded bg-green-500"
+                className="flex h-4 flex-row items-center rounded-full bg-emerald-500"
                 style={{ width: `${(user.totalPoints / maxScore) * 100}%` }}
               ></div>
             </div>
           </div>
         </Link>
       ))}
+      </div>
     </div>
   );
 };
@@ -421,7 +423,7 @@ const Home: NextPage = () => {
               <AddActivityWizard />
             </div>
           </div>
-          <div className="mx-2 flex flex-col gap-3">
+          <div className="mx-3 flex flex-col gap-3">
             <UpcomingWorkoutsView workouts={data} />
             {!pointsLoading &&
             points &&
@@ -443,7 +445,7 @@ const Home: NextPage = () => {
               </div>
             )}
             <div className="mt-5 flex flex-col gap-3">
-              <div className="text-lg font-bold">Activity Feed</div>
+              <div className="text-xl font-bold">Activity Feed</div>
               {!feedLoading &&
                 feedData &&
                 feedData.map((feedItem, i) => {
