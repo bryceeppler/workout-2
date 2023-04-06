@@ -250,7 +250,13 @@ export const usersRouter = createTRPCRouter({
       console.log(`Number of completed workouts: ${completedWorkouts.length}`)
       console.log(`Number of combined activities: ${combinedActivities.length}`)
       const users = await clerkClient.users.getUserList();
-      const feed = [];
+      const feed = [] as [
+        {
+          date: Date;
+          type: string;
+          message: string;
+        }
+      ]
       const today = new Date();
       const lastWeek = new Date(today);
       lastWeek.setDate(lastWeek.getDate() - 7);
@@ -271,7 +277,7 @@ export const usersRouter = createTRPCRouter({
         feed.push({
           date: workout.createdAt,
           type: "workout",
-          message: `${user.firstName} completed ${workout.workout.title} workout.`,
+          message: `${user.firstName || ""} completed ${workout.workout.title || ""} workout.`,
         });
       }
       );
@@ -281,28 +287,28 @@ export const usersRouter = createTRPCRouter({
           feed.push({
             date: activity.createdAt,
             type: "cardio",
-            message: `${user.firstName} completed ${activity.value} min of cardio.`,
+            message: `${user.firstName || ""} completed ${activity.value || 0} min of cardio.`,
           });
         }
         if (activity.type === "stretch") {
           feed.push({
             date: activity.createdAt,
             type: "stretch",
-            message: `${user.firstName} completed ${activity.value} min of stretching.`,
+            message: `${user.firstName || ""} completed ${activity.value || 0} min of stretching.`,
           });
         }
         if (activity.type === "cold plunge") {
           feed.push({
             date: activity.createdAt,
             type: "cold plunge",
-            message: `${user.firstName} completed a ${activity.value} min cold plunge.`,
+            message: `${user.firstName || ""} completed a ${activity.value || 0} min cold plunge.`,
           });
         }
         if (activity.type === "meal") {
           feed.push({
             date: activity.createdAt,
             type: "meal",
-            message: `${user.firstName} completed ${activity.value} meals.`,
+            message: `${user.firstName || ""} completed ${activity.value || 0} meals.`,
           });
         }
       }
