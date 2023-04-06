@@ -133,55 +133,49 @@ const User = () => {
           </div>
           <div className="mx-3 flex flex-col">
             <div className="mt-5 flex flex-col gap-3">
-
-              <div className="flex flex-col gap-2 text-sm mb-5 w-full max-w-sm mx-auto">
-                <div className="text-lg font-bold">{pointsForUser} total points</div>
+              <div className="mx-auto mb-5 flex w-full max-w-sm flex-col gap-2 text-sm">
+                <div className="text-lg font-bold">
+                  {pointsForUser} total points
+                </div>
                 <div className="flex justify-between">
                   <div>Workouts</div>
-                  <div
-                  className="font-bold text-emerald-300"
-                  >{numCompletedWorkouts || 0}</div>
+                  <div className="font-bold text-emerald-300">
+                    {numCompletedWorkouts || 0}
+                  </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Skipped</div>
-                  <div
-                  className="font-bold text-emerald-300"
-                  >{numSkippedWorkouts}</div>
+                  <div className="font-bold text-emerald-300">
+                    {numSkippedWorkouts}
+                  </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Meals Tracked</div>
-                  <div
-                  className="font-bold text-emerald-300"
-                  >{mealsTracked}</div>
+                  <div className="font-bold text-emerald-300">
+                    {mealsTracked}
+                  </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Mins Stretching</div>
-                  <div
-                  className="font-bold text-emerald-300"
-                  >{minsStretching}</div>
+                  <div className="font-bold text-emerald-300">
+                    {minsStretching}
+                  </div>
                 </div>
                 <div className="flex justify-between">
                   <div>Mins Cardio</div>
-                  <div
-                  className="font-bold text-emerald-300"
-                  >{minsCardio}</div>
+                  <div className="font-bold text-emerald-300">{minsCardio}</div>
                 </div>
                 <div className="flex justify-between">
                   <div>Mins Submerged</div>
-                  <div
-                  className="font-bold text-emerald-300"
-                  >{minsSubmerged}</div>
-                </div> 
+                  <div className="font-bold text-emerald-300">
+                    {minsSubmerged}
+                  </div>
+                </div>
                 <div className="flex justify-between">
                   <div>Overkill Points</div>
-                  <div
-                  className="font-bold text-emerald-300"
-                  >0</div>
-                </div> 
+                  <div className="font-bold text-emerald-300">0</div>
+                </div>
               </div>
-
-
-
 
               {spiderChartLoading ? (
                 <LoadingSpinner />
@@ -225,8 +219,8 @@ const User = () => {
                   </div>
                 )
               )}
-                            {points && completedWorkouts && (
-                <div className="mx-auto flex flex-col justify-center my-5">
+              {points && completedWorkouts && (
+                <div className="mx-auto my-5 flex flex-col justify-center">
                   <div className="text-white">Last 4 Weeks</div>
                   <UserHeatmap
                     points={points}
@@ -259,7 +253,7 @@ const User = () => {
                                   : " text-red-500"
                               }`}
                             >
-                              {workout.status}{" "} 
+                              {workout.status}{" "}
                               {dayjs(workout.createdAt).fromNow()}
                             </div>
                           </div>
