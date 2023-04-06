@@ -81,19 +81,6 @@ const User = () => {
             )}
             {isSignedIn && (
               <div className="flex w-full justify-between">
-                <div>
-                  <p>User: {uid}</p>
-                </div>
-                <SignOutButton />
-              </div>
-            )}
-          </div>
-          <div className="mx-2 flex flex-col">
-            {userDataLoading ? (
-              <LoadingSpinner />
-            ) : (
-              <div className="mt-5 flex flex-col gap-3">
-                <div className="flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-emerald-400">
                     {userData?.firstName} {userData?.lastName}
                   </h2>
@@ -103,9 +90,10 @@ const User = () => {
                   >
                     Back
                   </Link>
-                </div>
               </div>
             )}
+          </div>
+          <div className="mx-2 flex flex-col">
             <div className="mt-5 flex flex-col gap-3">
               {points && completedWorkouts && (
                 <div className="flex flex-col mx-auto justify-center">
