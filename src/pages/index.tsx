@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import type { RouterOutputs } from "~/utils/api";
-import {  api } from "~/utils/api";
+import { api } from "~/utils/api";
 import Image from "next/image";
 import Link from "next/link";
 import LoadingPage from "~/components/loading";
@@ -78,8 +78,8 @@ const ActivityModal = ({
     },
   });
   return (
-    <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm z-20 ">
-      <div className="w-full rounded border border-neutral-700 bg-neutral-800 p-4 sm:max-w-md z-20">
+    <div className="fixed left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm ">
+      <div className="z-20 w-full rounded border border-neutral-700 bg-neutral-800 p-4 sm:max-w-md">
         <div className="flex justify-between">
           <div className="text-lg font-bold">Add Activity</div>
           <CloseButton onClick={() => setModalOpen(false)} />
@@ -230,10 +230,9 @@ const UpcomingWorkoutsView = (props: { workouts: Workout[] }) => {
       {workouts?.map((workout) => (
         <IncompleteWorkoutView key={workout.id} workout={workout} />
       ))}
-      <Link
-        href="/workout"
-        className="mx-auto cursor-pointer text-emerald-500"
-      >View all workouts</Link>
+      <Link href="/workout" className="mx-auto cursor-pointer text-emerald-500">
+        View all workouts
+      </Link>
     </div>
   );
 };
@@ -253,24 +252,36 @@ export function getPointsForUser(userId: string, points: Points) {
 export type PointsList = Points;
 export type UserDetails = RouterOutputs["users"]["getAllUserInfo"];
 export type CompletedWorkouts = RouterOutputs["completedWorkouts"]["getAll"];
-const ProgressView = (props: { points: PointsList, usersDetails:UserDetails, completedWorkouts: CompletedWorkouts}) => {
+const ProgressView = (props: {
+  points: PointsList;
+  usersDetails: UserDetails;
+  completedWorkouts: CompletedWorkouts;
+}) => {
   const users = Object.values(props.points)
     .flatMap((userPoints) => Object.keys(userPoints))
     .filter((userId, index, self) => self.indexOf(userId) === index);
-  
+
   return (
     <div className="mt-5 flex flex-col gap-3">
       <div className="text-lg font-bold">Progress</div>
       <div className="rounded border border-neutral-600 p-4">
         {users.map((userId) => (
           <div key={userId} className="mb-4">
-            <Link 
+            <Link
               href={`/user/${userId}`}
-            className="truncate font-semibold hover:text-emerald-400">{props.usersDetails.find((user)=>user.id===userId)?.firstName}</Link>
+              className="truncate font-semibold hover:text-emerald-400"
+            >
+              {props.usersDetails.find((user) => user.id === userId)?.firstName}
+            </Link>
             <div className="text-sm text-neutral-400">
               {getPointsForUser(userId, props.points)} Points
             </div>
-            <UserHeatmap userId={userId} points={props.points} completedWorkouts={props.completedWorkouts} weeks={2}/>
+            <UserHeatmap
+              userId={userId}
+              points={props.points}
+              completedWorkouts={props.completedWorkouts}
+              weeks={2}
+            />
           </div>
         ))}
       </div>
@@ -282,7 +293,10 @@ import React from "react";
 import { User } from "@clerk/nextjs/dist/api";
 import { copyFile } from "fs";
 
-const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails}) => {
+const LeaderboardView = (props: {
+  points: PointsList;
+  usersDetails: UserDetails;
+}) => {
   const pointsArrToReturn = [];
   const users = new Set();
   for (const [_, value] of Object.entries(props.points)) {
@@ -311,13 +325,15 @@ const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails})
       {pointsArrToReturn.map((user) => (
         <Link
           key={user.userId}
-          className="flex h-12 w-full flex-row items-center rounded p-2 text-white hover:bg-black hover:border hover:border-emerald-500"
+          className="flex h-12 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-emerald-500 hover:bg-black"
           href={`/user/${user.userId}`}
         >
           <img
             // src={`https://robohash.org/${user.userId || "tempuser"}?set=set2`}
             src={
-              props.usersDetails.find((userDetails)=>userDetails.id===user.userId)?.profileImageUrl
+              props.usersDetails.find(
+                (userDetails) => userDetails.id === user.userId
+              )?.profileImageUrl
             }
             className="bg-base mr-3 h-8 w-8 rounded-full"
           />
@@ -326,7 +342,11 @@ const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails})
               //  cap the user id at 20 chars
               className="truncate text-sm font-semibold"
             >
-              {props.usersDetails.find((userDetails)=>userDetails.id===user.userId)?.firstName}
+              {
+                props.usersDetails.find(
+                  (userDetails) => userDetails.id === user.userId
+                )?.firstName
+              }
             </div>
             {/* Black background bar */}
             <div className="flex h-2 w-full flex-row items-center rounded bg-black">
@@ -345,7 +365,8 @@ const LeaderboardView = (props: { points: PointsList, usersDetails:UserDetails})
 
 const Home: NextPage = () => {
   const { user, isLoaded: userLoaded, isSignedIn } = useUser();
-  const {data: usersData, isLoading: usersLoading} = api.users.getAllUserInfo.useQuery();
+  const { data: usersData, isLoading: usersLoading } =
+    api.users.getAllUserInfo.useQuery();
   const { data: points, isLoading: pointsLoading } =
     api.users.getPoints.useQuery();
   const { data, isLoading: workoutsLoading } =
@@ -355,9 +376,10 @@ const Home: NextPage = () => {
         enabled: userLoaded,
       }
     );
-    const { data: completedWorkouts, isLoading: completedWorkoutsLoading } = api.completedWorkouts.getAll.useQuery();
-
-
+    const { data: feedData, isLoading: feedLoading } = api.users.getActivityFeed.useQuery();
+    console.log(feedData)
+  const { data: completedWorkouts, isLoading: completedWorkoutsLoading } =
+    api.completedWorkouts.getAll.useQuery();
 
   if (!userLoaded) return <LoadingPage />;
 
@@ -380,27 +402,55 @@ const Home: NextPage = () => {
               <AddActivityWizard />
             </div>
           </div>
-          <div
-            className="flex flex-col gap-3 mx-2"
-          >
-          <UpcomingWorkoutsView workouts={data} />
-          {!pointsLoading && points && !usersLoading && usersData && !completedWorkoutsLoading && completedWorkouts ? (
-            <>
-              <ProgressView points={points} usersDetails={usersData} completedWorkouts={completedWorkouts}/>
-              <LeaderboardView points={points} usersDetails={usersData} />
-            </>
-          ) : (
-            <div className="mt-5 flex justify-center">
-              <LoadingSpinner />
+          <div className="mx-2 flex flex-col gap-3">
+            <UpcomingWorkoutsView workouts={data} />
+            {!pointsLoading &&
+            points &&
+            !usersLoading &&
+            usersData &&
+            !completedWorkoutsLoading &&
+            completedWorkouts ? (
+              <>
+                <ProgressView
+                  points={points}
+                  usersDetails={usersData}
+                  completedWorkouts={completedWorkouts}
+                />
+                <LeaderboardView points={points} usersDetails={usersData} />
+              </>
+            ) : (
+              <div className="mt-5 flex justify-center">
+                <LoadingSpinner />
+              </div>
+            )}
+            <div className="mt-5 flex flex-col gap-3">
+              <div className="text-lg font-bold">Activity Feed</div>
+              {
+                !feedLoading && feedData && feedData.map((feedItem, i) => {
+                  return (
+                    <div key={i}
+                      className="p-2 border border-neutral-600 rounded"
+                    >
+                      <div
+                        className="text-sm"
+                      >
+                       {feedItem.message}
+                       </div>
+                       <div className="text-xs text-neutral-400">
+                        7 hours ago
+                        </div>
+                      </div>
+                  )
+                })
+                  
+              }
             </div>
-          )}
-          <div className="mt-10 flex justify-center">
-            <SignOutButton />
-          </div>
+            <div className="mt-10 flex justify-center">
+              <SignOutButton />
+            </div>
           </div>
         </div>
       </main>
-
     </>
   );
 };

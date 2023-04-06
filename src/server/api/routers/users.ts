@@ -104,6 +104,7 @@ function calculatePoints(
  return points;
 }
 
+
 function filterUserData(users: User[]) {
 
     return users.map((user) => {
@@ -226,6 +227,91 @@ export const usersRouter = createTRPCRouter({
       });
       
       return data;
+    }),
+    getActivityFeed: publicProcedure
+    .query(async ({ ctx }) => {
+      // get all completedWorkouts and activities for the last 7 days
+      // sort by date
+      // return an array of objects with the following shape
+      // {
+      //   date: "2021-09-01",
+      //   type: "workout", // || "meal" || "stretch" || "cardio" || "cold plunge" || 
+      //   message: "User1 completed Legs workout." || "User1 completed 25 min of cardio." || "User1 completed 10 min of stretching." || "User1 completed a 2 min cold plunge." || "User1 completed 3 meals.
+      // }
+      const completedWorkouts = await ctx.prisma.completedWorkout.findMany(
+        {
+          include: {
+            workout: true,
+          },
+        }
+      );
+      const completedActivities = await ctx.prisma.activity.findMany();
+      const combinedActivities = preprocessActivities(completedActivities);
+      console.log(`Number of completed workouts: ${completedWorkouts.length}`)
+      console.log(`Number of combined activities: ${combinedActivities.length}`)
+      const users = await clerkClient.users.getUserList();
+      const feed = [];
+      const today = new Date();
+      const lastWeek = new Date(today);
+      lastWeek.setDate(lastWeek.getDate() - 7);
+      
+      const filteredWorkouts = completedWorkouts.filter((workout) => {
+        const workoutDate = new Date(workout.createdAt);
+        return workoutDate >= lastWeek && workoutDate <= today;
+      });
+      
+      const filteredActivities = combinedActivities.filter((activity) => {
+        const activityDate = new Date(activity.createdAt);
+        return activityDate >= lastWeek && activityDate <= today;
+      });
+      
+      console.log(`Number of filtered workouts: ${filteredWorkouts.length}`)
+      filteredWorkouts.forEach((workout) => {
+        const user = users.find((user) => user.id === workout.authorId);
+        feed.push({
+          date: workout.createdAt,
+          type: "workout",
+          message: `${user.firstName} completed ${workout.workout.title} workout.`,
+        });
+      }
+      );
+      filteredActivities.forEach((activity) => {
+        const user = users.find((user) => user.id === activity.authorId);
+        if (activity.type === "cardio") {
+          feed.push({
+            date: activity.createdAt,
+            type: "cardio",
+            message: `${user.firstName} completed ${activity.value} min of cardio.`,
+          });
+        }
+        if (activity.type === "stretch") {
+          feed.push({
+            date: activity.createdAt,
+            type: "stretch",
+            message: `${user.firstName} completed ${activity.value} min of stretching.`,
+          });
+        }
+        if (activity.type === "cold plunge") {
+          feed.push({
+            date: activity.createdAt,
+            type: "cold plunge",
+            message: `${user.firstName} completed a ${activity.value} min cold plunge.`,
+          });
+        }
+        if (activity.type === "meal") {
+          feed.push({
+            date: activity.createdAt,
+            type: "meal",
+            message: `${user.firstName} completed ${activity.value} meals.`,
+          });
+        }
+      }
+      );
+      feed.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      }
+      );
+      return feed;
     }),
       
 });
