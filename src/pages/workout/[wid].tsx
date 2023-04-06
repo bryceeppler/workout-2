@@ -73,14 +73,13 @@ const Workout = () => {
   const utils = api.useContext();
   const [comment, setComment] = useState("");
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const fetchComments = api.workouts.fetchComments.useQuery(
-    {
-      workoutId: Number(wid),
-    });
-   const { data: comments, isLoading: commentsLoading } = fetchComments;
-   const sortedComments = comments?.sort((a, b) => {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-   }); 
+  const fetchComments = api.workouts.fetchComments.useQuery({
+    workoutId: Number(wid),
+  });
+  const { data: comments, isLoading: commentsLoading } = fetchComments;
+  const sortedComments = comments?.sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
   const completeWorkout = api.workouts.completeWorkout.useMutation({
     onSuccess: () => {
       notifyComplete();
@@ -92,8 +91,10 @@ const Workout = () => {
 
   const createComment = api.workouts.createComment.useMutation({
     onSuccess: () => {
-      utils.workouts.fetchComments.invalidate({ workoutId: Number(wid) }).catch((err) => console.log(err));
-    }
+      utils.workouts.fetchComments
+        .invalidate({ workoutId: Number(wid) })
+        .catch((err) => console.log(err));
+    },
   });
 
   const { data, isLoading: workoutLoading } = api.workouts.get.useQuery(
@@ -130,7 +131,8 @@ const Workout = () => {
                   {data.title}
                 </h2>
                 <button
-                  type="button" onClick={() => router.back()}
+                  type="button"
+                  onClick={() => router.back()}
                   className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
                 >
                   Back
@@ -142,34 +144,43 @@ const Workout = () => {
             {workoutLoading && <LoadingSpinner />}
             {data && (
               <div className="mt-5 flex flex-col gap-3">
-                <div className="text-neutral-200 w-full space-y-1 whitespace-pre-wrap p-2 text-sm ">
+                <div className="w-full space-y-1 whitespace-pre-wrap p-2 text-sm text-neutral-200 ">
                   {<div>{data.workout_str}</div>}
                 </div>
 
-                <div
+                <div className="flex flex-row justify-between">
+                  <div className="">
+                    <div className="text-lg font-semibold text-white">
+                      Comments
+                    </div>
+                    <div className="text-sm text-neutral-400">
+                      {sortedComments?.length || "0"} comments
+                    </div>
+                  </div>
 
-                >
+                  {/* question mark button to open a small tooltip explaining the component */}
+                  {/* circle that triggers the tooltip on hover */}
                   <div
-                                    className="text-lg font-semibold text-white"
-                  >Comments</div>
-                <div
-                                  className="text-sm text-neutral-400"
-                >{sortedComments?.length || "0"} comments</div>
-                </div>
-              {/* question mark button to open a small tooltip explaining the component */}
-              <div>
-                {/* circle that triggers the tooltip on hover */}
-                <div className="w-6 h-6 bg-red-200 rounded-full"
-                onMouseEnter={() => setTooltipVisible(true)}
-                onMouseLeave={() => setTooltipVisible(false)}
-                ></div>
-                {/* tooltip */}
-                <div className={`absolute w-64 h-32 bg-red-200 rounded-lg
+                    className="flex relative"
+                  >
+                    <div
+                      className="text-md flex h-6 w-6 content-center justify-center rounded-full bg-emerald-400 text-center "
+                      onMouseEnter={() => setTooltipVisible(true)}
+                      onMouseLeave={() => setTooltipVisible(false)}
+                    >
+                      ?
+                    </div>
+                    {/* tooltip */}
+                    <div
+                      className={`absolute top-0 right-0 -translate-x-10 z-10 w-48 rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition-opacity duration-300 dark:bg-gray-700
                 ${tooltipVisible ? "visible" : "invisible"}
-                `}></div>
+                `}
+                    >Comments can be used to track your progress for this workout. They will always be here so you can revisit them later.</div>
+                  </div>
 
-              </div>
-              <div className="text-sm text-neutral-300"></div>
+                </div>
+
+                <div className="text-sm text-neutral-300"></div>
                 {/* comments */}
                 {/* create comment */}
                 <div className="flex w-full gap-3">
@@ -186,12 +197,11 @@ const Workout = () => {
                     value={comment}
                     onChange={(e) => {
                       setComment(e.target.value);
-                    }
-                    }
+                    }}
                     className="grow rounded border border-neutral-700 bg-transparent p-1 text-sm outline-none focus:border-emerald-500"
                   ></textarea>
                 </div>
-                <div className="w-full flex p-4 justify-end">
+                <div className="flex w-full justify-end p-4">
                   <div
                     className="rounded border border-emerald-400 bg-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-emerald-400"
                     onClick={(e) => {
@@ -203,19 +213,20 @@ const Workout = () => {
                       });
                       setComment("");
                     }}
-                  >Submit</div>
+                  >
+                    Submit
+                  </div>
                 </div>
 
                 {/* comments */}
                 <div className="flex flex-col gap-6">
-                  {
-                    sortedComments?.map((comment) => {
-                      return (
-                        <div className="flex gap-3">
-                          <Link href={`/user/${comment.authorId}`}
-                                                      className="h-10 w-10 rounded-full"
-
-                          >
+                  {sortedComments?.map((comment) => {
+                    return (
+                      <div className="flex gap-3">
+                        <Link
+                          href={`/user/${comment.authorId}`}
+                          className="h-10 w-10 rounded-full"
+                        >
                           <Image
                             src={comment.authorImageUrl!}
                             alt="Profile image"
@@ -223,21 +234,25 @@ const Workout = () => {
                             width={40}
                             height={40}
                           ></Image>
-                          </Link>
-                          <div className="flex flex-col w-full">
-                            <div className="flex justify-between">
-                              <Link className="font-bold text-sm"
+                        </Link>
+                        <div className="flex w-full flex-col">
+                          <div className="flex justify-between">
+                            <Link
+                              className="text-sm font-bold"
                               href={`/user/${comment.authorId}`}
-                              >{comment.authorName}</Link>
-                              <div className="text-sm">{comment.createdAt.toLocaleDateString()}</div>
+                            >
+                              {comment.authorName}
+                            </Link>
+                            <div className="text-sm">
+                              {comment.createdAt.toLocaleDateString()}
                             </div>
-                            <div className="text-sm">{comment.content}</div>
                           </div>
+                          <div className="text-sm">{comment.content}</div>
                         </div>
-                      )
-                    })
-                  }
-                  </div>
+                      </div>
+                    );
+                  })}
+                </div>
 
                 {/* complete buttons/status */}
                 <div className="mb-20 mt-10 flex justify-center gap-3">
