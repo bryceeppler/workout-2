@@ -178,7 +178,7 @@ const Workout = () => {
                     // console.log("Sets: ", setsValues);
                     // console.log("Reps: ", repsValues);
                     const setsAndRepsString = setsValues.map((set, i) => {
-                      return `${set}x${repsValues[i]}`;
+                      return `${set}x${repsValues[i]!}`;
                     }).join(" ");
                     if (setsAndRepsString === "") return;
                     completeExercise.mutate({ workoutId: Number(wid), userId: user?.id ?? "", setsAndReps: setsAndRepsString, exerciseName: data.title || "", notes: notes  })
