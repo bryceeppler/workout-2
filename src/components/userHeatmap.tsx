@@ -73,4 +73,4 @@ export default function UserHeatmap({userId, points, completedWorkouts, weeks}: 
             })}
           </div>
         );
-      };
+      }

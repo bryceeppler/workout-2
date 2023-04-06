@@ -200,7 +200,7 @@ export const usersRouter = createTRPCRouter({
         (activity) => activity.authorId === user.id
       );
 
-        let data = [0, 0, 0, 0, 0];
+        const data = [0, 0, 0, 0, 0];
       userWorkouts.forEach((workout) => {
         if (workout.status !== "completed") {
           return;
