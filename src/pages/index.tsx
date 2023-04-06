@@ -186,14 +186,7 @@ const AddActivityWizard = () => {
   const { user } = useUser();
   const [modalOpen, setModalOpen] = useState(false);
   const showToast = () => {
-    toast("Activity added!", {
-      className: "",
-      style: {
-        color: "white",
-        background: "#44403c",
-        border: "1px solid #10b981",
-      },
-    });
+    toast("Activity added!");
   };
   if (!user) return null;
 
