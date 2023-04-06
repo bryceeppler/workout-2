@@ -130,7 +130,7 @@ const User = () => {
           <div className="mx-2 flex flex-col">
             <div className="mt-5 flex flex-col gap-3">
 
-              <div className="flex flex-col gap-2 mx-5 text-sm mb-5">
+              <div className="flex flex-col gap-2 text-sm mb-5 w-full max-w-sm mx-auto">
                 <div className="text-lg font-bold">{pointsForUser} total points</div>
                 <div className="flex justify-between">
                   <div>Workouts</div>

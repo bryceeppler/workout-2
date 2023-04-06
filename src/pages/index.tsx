@@ -230,6 +230,10 @@ const UpcomingWorkoutsView = (props: { workouts: Workout[] }) => {
       {workouts?.map((workout) => (
         <IncompleteWorkoutView key={workout.id} workout={workout} />
       ))}
+      <Link
+        href="/workout"
+        className="mx-auto cursor-pointer text-emerald-500"
+      >View all workouts</Link>
     </div>
   );
 };
