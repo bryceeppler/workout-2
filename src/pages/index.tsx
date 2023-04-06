@@ -239,7 +239,7 @@ interface Points {
   };
 }
 
-function getPointsForUser(userId: string, points: Points) {
+export function getPointsForUser(userId: string, points: Points) {
   let userpoints = 0;
   Object.values(points).forEach((day) => {
     userpoints += day[userId] || 0;

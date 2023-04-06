@@ -7,6 +7,7 @@ import SignInPage from "~/components/signin";
 import { useState } from "react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
+import { getPointsForUser } from "..";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -55,6 +56,10 @@ const User = () => {
       },
     ],
   };
+  const pointsForUser = user?.id && points && getPointsForUser(
+    user?.id,
+    points
+  );
   if (!userLoaded) return <LoadingPage />;
 
   if (!isSignedIn) return <SignInPage />;
@@ -83,85 +88,79 @@ const User = () => {
               </div>
             )}
           </div>
-          <div
-            className="flex flex-col mx-2"
-          >
-          {userDataLoading ? (
-            <LoadingSpinner />
-          ) : (
-            <div className="mt-5 flex flex-col gap-3">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-emerald-400">
-                  {userData?.firstName} {userData?.lastName}
-                </h2>
-                <Link
-                  href="/"
-                  className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
-                >
-                  Back
-                </Link>
+          <div className="mx-2 flex flex-col">
+            {userDataLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <div className="mt-5 flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-emerald-400">
+                    {userData?.firstName} {userData?.lastName}
+                  </h2>
+                  <Link
+                    href="/"
+                    className="rounded border border-emerald-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-neutral-700"
+                  >
+                    Back
+                  </Link>
+                </div>
               </div>
+            )}
+            <div className="mt-5 flex flex-col gap-3">
+              {points && completedWorkouts && (
+                <div className="flex flex-col mx-auto justify-center">
+                  <div className="text-white">{pointsForUser} points total</div>
+                  <UserHeatmap
+                    points={points}
+                    completedWorkouts={completedWorkouts}
+                    userId={user.id}
+                    weeks={2}
+                  />
+                </div>
+              )}
+              {spiderChartLoading ? (
+                <LoadingSpinner />
+              ) : (
+                data && (
+                  <div className="flex h-64 w-full justify-center">
+                    <Radar
+                      data={data}
+                      options={{
+                        responsive: true,
+                        // change line color to white
+                        scales: {
+                          r: {
+                            pointLabels: {
+                              color: "white",
+                            },
+                            angleLines: {
+                              color: "gray",
+                            },
+                            grid: {
+                              color: "gray",
+                            },
+                            ticks: {
+                              // https://www.chartjs.org/docs/latest/axes/radial/#ticks
+                              color: "white",
+                              backdropColor: "transparent", // https://www.chartjs.org/docs/latest/axes/_common_ticks.html
+                            },
+                          },
+                        },
+                        maintainAspectRatio: false,
+                        color: "white",
+                        plugins: {
+                          legend: {
+                            labels: {
+                              color: "white",
+                            },
+                          },
+                        },
+                      }}
+                    />
+                  </div>
+                )
+              )}
             </div>
-          )}
-          <div
-            className="flex flex-col gap-3 mt-5"
-          >
-          {
-            points && completedWorkouts && (
-              <div
-                className="flex justify-center"
-              >
-              <UserHeatmap points={points}
-              completedWorkouts={completedWorkouts}
-              userId={user.id}
-              weeks={2}
-
-              /></div>
-            )
-          }
-          {spiderChartLoading ? (
-            <LoadingSpinner />
-          ) : (
-            data && (
-              <div
-                className="flex justify-center w-full h-64"
-              >
-              <Radar
-                data={data}
-                options={{
-                  responsive: true,
-                  // change line color to white
-                  scales: {
-                    r: {
-                      pointLabels: {
-                        color: "white",
-                      },
-                      angleLines: {
-                        color: "gray",
-                      },
-                      grid: {
-                        color: "gray",
-                      },
-                      ticks: {
-                        // https://www.chartjs.org/docs/latest/axes/radial/#ticks
-                        color: "white",
-                        backdropColor: "transparent", // https://www.chartjs.org/docs/latest/axes/_common_ticks.html
-                      },
-                    },
-                  },
-                  maintainAspectRatio: false,
-                  color: "white",
-                  plugins: {
-                    legend: {
-                      labels: {
-                        color: "white",
-                      },
-                    },
-                  },
-                }}
-              /></div>
-            )
-          )}</div>
           </div>
         </div>
       </main>
