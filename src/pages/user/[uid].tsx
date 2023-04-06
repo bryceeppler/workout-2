@@ -56,8 +56,8 @@ const User = () => {
       },
     ],
   };
-  const pointsForUser = user?.id && points && getPointsForUser(
-    user?.id,
+  const pointsForUser = points && getPointsForUser(
+    uid as string,
     points
   );
   if (!userLoaded) return <LoadingPage />;
@@ -113,7 +113,7 @@ const User = () => {
                   <UserHeatmap
                     points={points}
                     completedWorkouts={completedWorkouts}
-                    userId={user.id}
+                    userId={uid as string}
                     weeks={2}
                   />
                 </div>
