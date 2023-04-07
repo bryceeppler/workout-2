@@ -38,6 +38,7 @@ const User = () => {
   const utils = api.useContext();
   const { data: userData, isLoading: userDataLoading } =
     api.users.getUserInfo.useQuery({ userId: uid as string });
+    console.log('user data', userData);
   const { data: userActivity, isLoading: userActivityLoading } =
     api.activities.getByUser.useQuery({ userId: uid as string });
   const { data: spiderChartData, isLoading: spiderChartLoading } =
@@ -116,10 +117,10 @@ const User = () => {
                 <SignInButton />
               </div>
             )}
-            {isSignedIn && (
+            {isSignedIn && usersData && (
               <div className="flex w-full items-center justify-between">
                 <h2 className="text-2xl font-bold text-violet-400 ">
-                  {userData?.firstName} {userData?.lastName}
+                  {userData?.firstName } {userData?.lastName}
                 </h2>
                 <button
                   type="button"

@@ -239,25 +239,8 @@ export const usersRouter = createTRPCRouter({
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const user = await clerkClient.users.getUser(input.userId);
-      // now we want to add a streak field t the user object
-      const filteredUser = filterUserData([user][0]);
-      // fetch the users completed workouts and activities and calculate the streak
-      const completedWorkouts = await ctx.prisma.completedWorkout.findMany({
-        where: {
-          authorId: user.id,
-        },
-      });
-      const completedActivities = await ctx.prisma.activity.findMany({
-        where: {
-          authorId: user.id,
-        },
-      });
-      const combinedActivities = preprocessActivities(completedActivities);
-      const streak = calculateStreak(completedWorkouts, combinedActivities);
-      return {
-        ...filteredUser,
-        streak,
-      };
+      const filteredUser = filterUserData([user])[0];
+      return filteredUser; 
     }),
 
   getUserSpiderChart: publicProcedure
