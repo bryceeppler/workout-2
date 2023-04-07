@@ -38,7 +38,7 @@ const User = () => {
   const utils = api.useContext();
   const { data: userData, isLoading: userDataLoading } =
     api.users.getUserInfo.useQuery({ userId: uid as string });
-    console.log('user data', userData);
+  console.log("user data", userData);
   const { data: userActivity, isLoading: userActivityLoading } =
     api.activities.getByUser.useQuery({ userId: uid as string });
   const { data: spiderChartData, isLoading: spiderChartLoading } =
@@ -120,7 +120,7 @@ const User = () => {
             {isSignedIn && usersData && (
               <div className="flex w-full items-center justify-between">
                 <h2 className="text-2xl font-bold text-violet-400 ">
-                  {userData?.firstName } {userData?.lastName}
+                  {userData?.firstName} {userData?.lastName}
                 </h2>
                 <button
                   type="button"
@@ -134,45 +134,50 @@ const User = () => {
           </div>
           <div className="mx-3 flex flex-col">
             <div className="mt-5 flex flex-col gap-3">
-              <div className="mx-auto mb-5 flex w-full max-w-sm flex-col gap-2 text-sm">
+              <div className="mx-auto mb-5 flex w-full max-w-sm flex-col gap-2 text-sm bg-neutral-800 p-4">
+                <div>
                 <div className="text-lg font-bold">
+                  Statistics
+                </div>
+                <div className="font-mono text-violet-300">
                   {pointsForUser} total points
                 </div>
-                <div className="flex justify-between">
-                  <div>Workouts</div>
+                </div>
+                <div className="flex justify-between border-b border-neutral-600 pb-2">
+                  <div>Completed workouts</div>
                   <div className="font-bold text-violet-300">
                     {numCompletedWorkouts || 0}
                   </div>
                 </div>
-                <div className="flex justify-between">
-                  <div>Skipped</div>
+                <div className="flex justify-between border-b border-neutral-600 pb-2">
+                  <div>Skipped workouts</div>
                   <div className="font-bold text-violet-300">
                     {numSkippedWorkouts}
                   </div>
                 </div>
-                <div className="flex justify-between">
-                  <div>Meals Tracked</div>
+                <div className="flex justify-between border-b border-neutral-600 pb-2">
+                  <div>Meals tracked</div>
                   <div className="font-bold text-violet-300">
                     {mealsTracked}
                   </div>
                 </div>
-                <div className="flex justify-between">
-                  <div>Mins Stretching</div>
+                <div className="flex justify-between border-b border-neutral-600 pb-2">
+                  <div>Stretching (min)</div>
                   <div className="font-bold text-violet-300">
                     {minsStretching}
                   </div>
                 </div>
-                <div className="flex justify-between">
-                  <div>Mins Cardio</div>
+                <div className="flex justify-between border-b border-neutral-600 pb-2">
+                  <div>Cardio (min)</div>
                   <div className="font-bold text-violet-300">{minsCardio}</div>
                 </div>
-                <div className="flex justify-between">
-                  <div>Mins Submerged</div>
+                <div className="flex justify-between border-b border-neutral-600 pb-2">
+                  <div>Cold plunge (min)</div>
                   <div className="font-bold text-violet-300">
                     {minsSubmerged}
                   </div>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between border-b border-neutral-600 pb-2">
                   <div>Overkill Points</div>
                   <div className="font-bold text-violet-300">0</div>
                 </div>
