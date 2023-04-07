@@ -250,7 +250,7 @@ const Workout = () => {
                               {dayjs(comment.createdAt).fromNow()}
                             </div>
                           </div>
-                          <div className="text-sm">{comment.content}</div>
+                          <div className="text-sm whitespace-pre-wrap">{comment.content}</div>
                         </div>
                       </div>
                     );
