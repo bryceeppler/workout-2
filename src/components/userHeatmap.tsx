@@ -33,19 +33,19 @@ export default function UserHeatmap({userId, points, completedWorkouts, weeks}: 
                   workout.authorId === userId &&
                   workout.status === "skipped"
               );
-      
+
               const userPoints = points[dateString]?.[userId] || 0;
               let bgColor;
               let border;
               switch (userPoints) {
                 case 1:
-                  bgColor = "bg-green-500 bg-opacity-50";
+                  bgColor = "bg-green-600 bg-opacity-30";
                   break;
                 case 2:
-                  bgColor = "bg-green-500 bg-opacity-75";
+                  bgColor = "bg-green-600 bg-opacity-60";
                   break;
                 case 3:
-                  bgColor = "bg-green-500 ";
+                  bgColor = "bg-green-600 bg-opacity-90";
                   break;
                 default:
                   bgColor = "bg-neutral-700";
