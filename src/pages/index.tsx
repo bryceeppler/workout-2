@@ -93,7 +93,7 @@ const ActivityModal = ({
     },
   });
   return (
-    <div className="fixed left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 backdrop-blur-sm p-2">
+    <div className="fixed left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-neutral-900 bg-opacity-50 p-2 backdrop-blur-sm">
       <div className="z-20 w-full rounded border border-neutral-700 bg-neutral-900 p-4 sm:max-w-md">
         <div className="flex justify-between">
           <div className="text-xl font-bold">Add Activity</div>
@@ -182,6 +182,22 @@ const ActivityModal = ({
     </div>
   );
 };
+const flameIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      className="fill-orange-400"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M13.4997 4.93762C16.8478 6.87062 17.9949 11.1518 16.0619 14.4998C14.1289 17.8479 9.84775 18.995 6.4997 17.062C3.15166 15.129 2.00453 10.8479 3.93753 7.4998C4.10592 7.20813 4.29214 6.93316 4.49401 6.67548C4.69562 6.41812 5.08463 6.45704 5.28714 6.71368C5.56487 7.06565 5.88119 7.38577 6.22971 7.66764C6.56235 7.93667 7.01647 7.61943 7.00304 7.19183C7.00103 7.12812 7.00003 7.06416 7.00003 6.99997C7.00003 6.08143 7.20643 5.2111 7.57539 4.43282C8.10854 3.30822 8.98111 2.37583 10.0608 1.76798C10.3078 1.62893 10.6112 1.7522 10.7378 2.00584C11.3297 3.1927 12.2651 4.2248 13.4997 4.93762ZM14 12C14 14.2091 12.2092 16 10 16C8.08674 16 6.4791 14.6016 6.09017 12.8183C5.9966 12.3894 6.52967 12.1749 6.90396 12.4045C7.38998 12.7025 7.93731 12.8964 8.50538 12.9685C8.80801 13.0068 9.03609 12.7289 9.01482 12.4246C9.00501 12.2844 9.00002 12.1428 9.00002 12C9.00002 10.5731 9.49812 9.26254 10.3299 8.23269C10.4337 8.10417 10.599 8.04108 10.7612 8.07233C12.6063 8.4278 14 10.0511 14 12Z"
+    />
+  </svg>
+);
 const AddActivityWizard = () => {
   const { user } = useUser();
   const [modalOpen, setModalOpen] = useState(false);
@@ -199,19 +215,30 @@ const AddActivityWizard = () => {
           userId={user.id}
         />
       )}
-      <div className="flex gap-3">
-        <Image
-          src={user.profileImageUrl}
-          alt="Profile image"
-          className="h-14 w-14 rounded-full"
-          width={56}
-          height={56}
-        />
+      <div className="flex justify-between">
+        <div className="flex flex-row gap-3">
+          <Image
+            src={user.profileImageUrl}
+            alt="Profile image"
+            className="h-14 w-14 rounded-full"
+            width={56}
+            height={56}
+          />
+          <div className="flex flex-col">
+            <div className="">{user.firstName}</div>
+            <div className="flex flex-row items-center gap-1">
+              {flameIcon()}
+              <div className="text-sm text-neutral-400"> day streak</div>
+            </div>
+            {/* <div className="text-xs text-neutral-400">{9} points</div> */}
+
+          </div>
+        </div>
         <div
-          className="my-auto cursor-pointer rounded bg-violet-500 px-4 py-2 font-semibold text-neutral-200 shadow hover:bg-violet-400"
+          className="my-auto cursor-pointer "
           onClick={() => setModalOpen(true)}
         >
-          Add activity
+          {plusButton()}
         </div>
       </div>
     </>
@@ -239,7 +266,10 @@ const UpcomingWorkoutsView = (props: { workouts: Workout[] }) => {
       {workouts?.map((workout) => (
         <IncompleteWorkoutView key={workout.id} workout={workout} />
       ))}
-      <Link href="/workout" className="mx-auto cursor-pointer text-violet-500 text-sm">
+      <Link
+        href="/workout"
+        className="mx-auto cursor-pointer text-sm text-violet-500"
+      >
         View all workouts
       </Link>
     </div>
@@ -327,51 +357,68 @@ const LeaderboardView = (props: {
   return (
     <div className="mt-5 flex w-full flex-col text-left">
       <div className="text-xl font-bold text-white">Leaderboard</div>
-      <div className="flex flex-col gap-3 mt-3">
-      {pointsArrToReturn.map((user) => (
-        <Link
-          key={user.userId}
-          className="flex h-16 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-violet-500 hover:bg-black"
-          href={`/user/${user.userId}`}
-        >
-          <Image
-            // src={`https://robohash.org/${user.userId || "tempuser"}?set=set2`}
-            alt="Profile image"
-            src={
-              props.usersDetails.find(
-                (userDetails) => userDetails.id === user.userId
-              )?.profileImageUrl || ""
-            }
-            width={46}
-            height={46}
-            className="bg-base mr-3 rounded-full"
-          />
-          <div className="flex w-full flex-col">
-            <div
-              //  cap the user id at 20 chars
-              className="truncate font-semibold"
-            >
-              {
+      <div className="mt-3 flex flex-col gap-3">
+        {pointsArrToReturn.map((user) => (
+          <Link
+            key={user.userId}
+            className="flex h-16 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-violet-500 hover:bg-black"
+            href={`/user/${user.userId}`}
+          >
+            <Image
+              // src={`https://robohash.org/${user.userId || "tempuser"}?set=set2`}
+              alt="Profile image"
+              src={
                 props.usersDetails.find(
                   (userDetails) => userDetails.id === user.userId
-                )?.firstName
+                )?.profileImageUrl || ""
               }
-            </div>
-            {/* Black background bar */}
-            <div className="flex h-4 w-full flex-row items-center rounded-full bg-black">
-              {/* Green progress bar */}
+              width={46}
+              height={46}
+              className="bg-base mr-3 rounded-full"
+            />
+            <div className="flex w-full flex-col">
               <div
-                className="flex h-4 flex-row items-center rounded-full bg-violet-500"
-                style={{ width: `${(user.totalPoints / maxScore) * 100}%` }}
-              ></div>
+                //  cap the user id at 20 chars
+                className="truncate font-semibold"
+              >
+                {
+                  props.usersDetails.find(
+                    (userDetails) => userDetails.id === user.userId
+                  )?.firstName
+                }
+              </div>
+              {/* Black background bar */}
+              <div className="flex h-4 w-full flex-row items-center rounded-full bg-black">
+                {/* Green progress bar */}
+                <div
+                  className="flex h-4 flex-row items-center rounded-full bg-violet-500"
+                  style={{ width: `${(user.totalPoints / maxScore) * 100}%` }}
+                ></div>
+              </div>
             </div>
-          </div>
-        </Link>
-      ))}
+          </Link>
+        ))}
       </div>
     </div>
   );
 };
+
+const plusButton = () => (
+  <svg
+    width="30"
+    height="30"
+    viewBox="0 0 30 30"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M15 2.8125C8.26903 2.8125 2.8125 8.26903 2.8125 15C2.8125 21.731 8.26903 27.1875 15 27.1875C21.731 27.1875 27.1875 21.731 27.1875 15C27.1875 8.26903 21.731 2.8125 15 2.8125ZM15.9375 11.25C15.9375 10.7322 15.5178 10.3125 15 10.3125C14.4822 10.3125 14.0625 10.7322 14.0625 11.25V14.0625H11.25C10.7322 14.0625 10.3125 14.4822 10.3125 15C10.3125 15.5178 10.7322 15.9375 11.25 15.9375H14.0625V18.75C14.0625 19.2678 14.4822 19.6875 15 19.6875C15.5178 19.6875 15.9375 19.2678 15.9375 18.75V15.9375H18.75C19.2678 15.9375 19.6875 15.5178 19.6875 15C19.6875 14.4822 19.2678 14.0625 18.75 14.0625H15.9375V11.25Z"
+      className="fill-violet-500 hover:fill-violet-400"
+    />
+  </svg>
+);
 
 const Home: NextPage = () => {
   const { user, isLoaded: userLoaded, isSignedIn } = useUser();
@@ -388,7 +435,7 @@ const Home: NextPage = () => {
     );
   const { data: feedData, isLoading: feedLoading } =
     api.users.getActivityFeed.useQuery();
-  console.log(feedData);
+  console.log(usersData);
   const { data: completedWorkouts, isLoading: completedWorkoutsLoading } =
     api.completedWorkouts.getAll.useQuery();
 
