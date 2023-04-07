@@ -118,6 +118,19 @@ export const workoutsRouter = createTRPCRouter({
     }
   }
   ),
+
+  deleteComment: publicProcedure.input(z.object({ commentId: z.number() })).mutation(async ({ ctx, input }) => {
+    try {
+      await ctx.prisma.workoutComment.delete({
+        where: {
+          id: input.commentId,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  ),
   
 
   fetchComments: publicProcedure.input(z.object({ workoutId: z.number() })).query(async ({ ctx, input }) => {

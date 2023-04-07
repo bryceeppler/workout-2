@@ -51,6 +51,16 @@ const Workout = () => {
     },
   });
 
+  const deleteComment = api.workouts.deleteComment.useMutation({
+    onSuccess: () => {
+      void utils.workouts.fetchComments
+        .invalidate({ workoutId: Number(wid) });
+
+      setEditComment(null);
+      toast("Comment deleted");
+    },
+  });
+
 
 
 
@@ -226,7 +236,17 @@ const Workout = () => {
                                   }}
                                   className="grow rounded border border-neutral-700 bg-transparent p-1 text-sm outline-none focus:border-violet-500"
                                 ></textarea>
-                                <div className="flex w-full justify-end p-4 gap-3">
+                                <div className="flex w-full justify-between p-4">
+                                  <div className="rounded border border-red-400 text-red-400 px-4 py-1 font-semiboldshadow transition-colors hover:bg-red-400 hover:text-neutral-200 text-xs"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    deleteComment.mutate({
+                                      commentId: editComment.id,
+                                    });
+                                    setEditComment(null);
+                                  }}
+                                  >Delete</div>
+                                  <div className="flex gap-3">
                                   {/* cancel button */}
                                   <div
                                    className="rounded border border-violet-400 px-4 py-1 font-semibold text-neutral-200 shadow transition-colors hover:bg-violet-400 text-xs"
@@ -250,6 +270,7 @@ const Workout = () => {
                                     }}
                                   >
                                     Submit
+                                    </div>
                                     </div>
                                     </div>
                                     </div>
