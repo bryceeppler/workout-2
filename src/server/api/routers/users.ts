@@ -104,51 +104,53 @@ function calculateStreak(
   completedWorkouts: CompletedWorkout[],
   activities: Activity[]
 ) {
-  console.log("calculateStreak")
+  // Filter the completedWorkouts and activities based on the conditions
+  const validWorkouts = completedWorkouts.filter(workout => workout.status === 'completed');
+  const validActivities = activities.filter(activity => {
+    if (activity.type === 'meal') {
+      return activity.value > 3;
+    } else if (activity.type === 'cardio') {
+      return activity.value >= 15;
+    } else if (activity.type === 'stretch') {
+      return activity.value >= 10;
+    }
+    return true;
+  });
+
+  // Combine validWorkouts and validActivities into one array
+  const combined = [
+    ...validWorkouts.map((workout) => ({
+      ...workout,
+      type: "workout",
+    })),
+    ...validActivities.map((activity) => ({
+      ...activity,
+      type: "activity",
+    })),
+  ];
+
+  // Sort the combined array by date in descending order
+  combined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  let streak = 0;
   const today = new Date();
-  let streakDay = new Date(today);
+  const streakDay = new Date(today);
 
-  const pointEarnedToday = completedWorkouts.some(
-    (workout) => getDateString(workout.createdAt) === getDateString(today) && workout.status === "completed"
-  ) || activities.some(
-    (activity) =>
-      (getDateString(activity.createdAt) === getDateString(today)) && (activity.type === "meal") ? (activity.value >= 3 ? true : false) : true
-  );
-
-
-  while (true) {
-    // Create a new date object for the previous day
-    const previousDay = new Date(streakDay);
-    previousDay.setDate(previousDay.getDate() - 1);
-
-    // Check if there are any completed workouts or activities on the previous day
-    if (
-      completedWorkouts.some(
-        (workout) =>
-          getDateString(workout.createdAt) === getDateString(previousDay) && workout.status === "completed"
-      )
-    ) {
-      streakDay = previousDay;
-    } else if (
-      activities.some(
-        (activity) =>
-          (getDateString(activity.createdAt) === getDateString(previousDay)) && (activity.type === "meal") ? (activity.value >= 3 ? true : false) : true
-      )
-    ) {
-      streakDay = previousDay;
-    } else {
+  // Iterate through the combined array and check if the streak continues
+  for (const item of combined) {
+    const itemDate = new Date(item.createdAt);
+    if (getDateString(itemDate) === getDateString(streakDay)) {
+      streak++;
+      streakDay.setDate(streakDay.getDate() - 1);
+    } else if (itemDate < streakDay) {
       break;
     }
   }
 
-  const lengthOfStreakInDays = Math.floor(
-    (today.getTime() - streakDay.getTime()) / (1000 * 3600 * 24)
-  );
-  if (pointEarnedToday) {
-    return lengthOfStreakInDays + 1;
-  }
-  return lengthOfStreakInDays;
+  return streak;
 }
+
+
 
 
 function filterUserData(users: User[]) {

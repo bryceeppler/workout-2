@@ -198,7 +198,8 @@ const flameIcon = () => (
     />
   </svg>
 );
-const AddActivityWizard = () => {
+type UserInfo = RouterOutputs["users"]["getAllUserInfo"][number];
+const AddActivityWizard = (props: {userDetails?: UserInfo}) => {
   const { user } = useUser();
   const [modalOpen, setModalOpen] = useState(false);
   const showToast = () => {
@@ -228,7 +229,7 @@ const AddActivityWizard = () => {
             <div className="">{user.firstName}</div>
             <div className="flex flex-row items-center gap-1">
               {flameIcon()}
-              <div className="text-sm text-neutral-400"> day streak</div>
+              <div className="text-sm text-neutral-400">{props.userDetails?.streak} day streak</div>
             </div>
             {/* <div className="text-xs text-neutral-400">{9} points</div> */}
 
@@ -314,6 +315,14 @@ const ProgressView = (props: {
             </Link>
             <div className="text-sm text-neutral-400">
               {getPointsForUser(userId, props.points)} Points
+            </div>
+            {/* streak */}
+            <div className="flex flex-row items-center gap-1 mb-2">
+              {flameIcon()}
+              <div className="text-sm text-neutral-400">
+                {props.usersDetails.find((user) => user.id === userId)?.streak}{" "}
+                day streak
+              </div>
             </div>
             <UserHeatmap
               userId={userId}
@@ -457,7 +466,25 @@ const Home: NextPage = () => {
         <div className="h-full w-full md:max-w-2xl">
           <div className="flex border-b border-neutral-600 p-4">
             <div className="flex w-full flex-col justify-between ">
-              <AddActivityWizard />
+              {usersData &&   <AddActivityWizard
+    userDetails={
+      usersData?.find(
+        (userDetails) => userDetails.id === user?.id
+      ) || {
+        streak: 0,
+        id: "",
+        firstName: null,
+        lastName: null,
+        emailAddresses: [],
+        profileImageUrl: "",
+        createdAt: 0,
+        updatedAt: 0,
+        username: null,
+      }
+    }
+  />
+}
+
             </div>
           </div>
           <div className="mx-3 flex flex-col gap-3">
