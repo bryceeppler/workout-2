@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { User } from "@clerk/nextjs/dist/api";
+import { type User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
-import { Activity, CompletedWorkout } from "@prisma/client";
+import { type Activity, type CompletedWorkout } from "@prisma/client";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -277,7 +277,8 @@ export const usersRouter = createTRPCRouter({
         feed.push({
           date: workout.createdAt,
           type: "workout",
-          message: `${user.firstName || ""} completed ${workout.workout.title || ""} workout.`,
+          // should be completed / skipped workout
+          message: `${user.firstName || ""} ${workout.status !== "completed" ? "skipped" : "completed"} ${workout.workout.title || ""} workout.`,
         });
       }
       );

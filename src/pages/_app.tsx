@@ -14,6 +14,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <Toaster 
       toastOptions={{
         className: '',
+        position: 'bottom-center',
         style: {
           color: 'white',
           background: '#44403c',
