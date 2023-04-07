@@ -88,6 +88,7 @@ const ActivityModal = ({
       utils.users.getActivityFeed
         .invalidate()
         .catch((err) => console.error(err));
+      void utils.users.getAllUserInfo.invalidate();
       showToast();
       setModalOpen(false);
     },

@@ -117,40 +117,44 @@ function calculateStreak(
     return true;
   });
 
-  // Combine validWorkouts and validActivities into one array
-  const combined = [
-    ...validWorkouts.map((workout) => ({
-      ...workout,
-      type: "workout",
-    })),
-    ...validActivities.map((activity) => ({
-      ...activity,
-      type: "activity",
-    })),
-  ];
-
-  // Sort the combined array by date in descending order
-  combined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
   let streak = 0;
   const today = new Date();
-  const streakDay = new Date(today);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const streakDay = new Date(yesterday);
 
-  // Iterate through the combined array and check if the streak continues
-  for (const item of combined) {
-    const itemDate = new Date(item.createdAt);
-    if (getDateString(itemDate) === getDateString(streakDay)) {
+  while (true) {
+    if (
+      validWorkouts.some(
+        (workout) =>
+          getDateString(workout.createdAt) === getDateString(streakDay)
+      ) ||
+      validActivities.some(
+        (activity) =>
+          getDateString(activity.createdAt) === getDateString(streakDay)
+      )
+    ) {
       streak++;
       streakDay.setDate(streakDay.getDate() - 1);
-    } else if (itemDate < streakDay) {
+    } else {
       break;
     }
   }
 
+  // Check if there's data for today and include it in the streak
+  if (
+    validWorkouts.some(
+      (workout) => getDateString(workout.createdAt) === getDateString(today)
+    ) ||
+    validActivities.some(
+      (activity) => getDateString(activity.createdAt) === getDateString(today)
+    )
+  ) {
+    streak++;
+  }
+
   return streak;
 }
-
-
 
 
 function filterUserData(users: User[]) {
