@@ -103,6 +103,23 @@ export const workoutsRouter = createTRPCRouter({
   }
   ),
 
+  updateComment: publicProcedure.input(z.object({ comment: z.string(), commentId: z.number() })).mutation(async ({ ctx, input }) => {
+    try {
+      await ctx.prisma.workoutComment.update({
+        where: {
+          id: input.commentId,
+        },
+        data: {
+          content: input.comment,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  ),
+  
+
   fetchComments: publicProcedure.input(z.object({ workoutId: z.number() })).query(async ({ ctx, input }) => {
     // we want to return the comment, but we also want to return the author instead of the author id and the user's profile image url.
     const userList = await clerkClient.users.getUserList();

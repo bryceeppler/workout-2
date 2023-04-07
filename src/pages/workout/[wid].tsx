@@ -11,64 +11,9 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
-const previousWorkoutData = {
-  title: "Chest",
-  date: "2021-08-01",
-  exercise: "Barbell Bench Press",
-  sets: [
-    {
-      weight: 100,
-      reps: 10,
-    },
-    {
-      weight: 100,
-      reps: 10,
-    },
-    {
-      weight: 100,
-      reps: 10,
-    },
-  ],
-};
-const notifyComplete = () => toast("Workout saved!");
-const PreviousWorkoutView = (props: {
-  workout: {
-    title: string;
-    date: string;
-    exercise: string;
-    sets: {
-      weight: number;
-      reps: number;
-    }[];
-  };
-}) => {
-  return (
-    <div className="rounded bg-neutral-800 p-4">
-      <div>Previous workout:</div>
 
-      <div className="flex justify-between">
-        <div>{props.workout.title}</div>
-        <div>{props.workout.date}</div>
-      </div>
-      <div className="flex justify-between">
-        <div>{props.workout.exercise}</div>
-        <div>{props.workout.sets.length} sets</div>
-      </div>
-      <div className="flex flex-col">
-        {props.workout.sets.map((set, i) => {
-          return (
-            <div key={i} className="flex justify-between">
-              <div>Set {i + 1}</div>
-              <div>
-                {set.weight} lbs x {set.reps}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+const notifyComplete = () => toast("Workout saved!");
+
 const Workout = () => {
   const router = useRouter();
   const { wid } = router.query;
@@ -91,6 +36,23 @@ const Workout = () => {
         .catch((err) => console.log(err));
     },
   });
+
+  const [editComment, setEditComment] = useState<{
+    id: number;
+    comment: string;
+  } | null>(null);
+
+  const updateComment = api.workouts.updateComment.useMutation({
+    onSuccess: () => {
+      void utils.workouts.fetchComments
+        .invalidate({ workoutId: Number(wid) });
+
+      setEditComment(null);
+    },
+  });
+
+
+
 
   const createComment = api.workouts.createComment.useMutation({
     onSuccess: () => {
@@ -161,11 +123,7 @@ const Workout = () => {
                     </div>
                   </div>
 
-                  {/* question mark button to open a small tooltip explaining the component */}
-                  {/* circle that triggers the tooltip on hover */}
-                  <div
-                    className="flex relative"
-                  >
+                  <div className="relative flex">
                     <div
                       className="text-md flex h-6 w-6 content-center justify-center rounded-full bg-violet-400 text-center "
                       onMouseEnter={() => setTooltipVisible(true)}
@@ -175,12 +133,15 @@ const Workout = () => {
                     </div>
                     {/* tooltip */}
                     <div
-                      className={`absolute top-0 right-0 -translate-x-10 z-10 w-48 rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition-opacity duration-300 dark:bg-gray-700
+                      className={`absolute right-0 top-0 z-10 w-48 -translate-x-10 rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition-opacity duration-300 dark:bg-gray-700
                 ${tooltipVisible ? "visible" : "invisible"}
                 `}
-                    >Comments can be used to track your progress for this workout. They will always be here so you can revisit them later.</div>
+                    >
+                      Comments can be used to track your progress for this
+                      workout. They will always be here so you can revisit them
+                      later.
+                    </div>
                   </div>
-
                 </div>
 
                 <div className="text-sm text-neutral-300"></div>
@@ -250,7 +211,70 @@ const Workout = () => {
                               {dayjs(comment.createdAt).fromNow()}
                             </div>
                           </div>
-                          <div className="text-sm whitespace-pre-wrap">{comment.content}</div>
+                          <div className="whitespace-pre-wrap text-sm">
+                            {editComment && editComment.id === comment.id ? (
+                              <div className="flex flex-col gap-3">
+                                <textarea
+                                  rows={8}
+                                  placeholder="Add a comment"
+                                  value={editComment.comment}
+                                  onChange={(e) => {
+                                    setEditComment({
+                                      ...editComment,
+                                      comment: e.target.value,
+                                    });
+                                  }}
+                                  className="grow rounded border border-neutral-700 bg-transparent p-1 text-sm outline-none focus:border-violet-500"
+                                ></textarea>
+                                <div className="flex w-full justify-end p-4 gap-3">
+                                  {/* cancel button */}
+                                  <div
+                                   className="rounded border border-violet-400 px-4 py-1 font-semibold text-neutral-200 shadow transition-colors hover:bg-violet-400 text-xs"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      setEditComment(null);
+                                    }}
+                                  >
+                                    Cancel
+                                  </div>
+                                  {/* submit button */}
+                                  <div
+                                    className="rounded border border-violet-400 bg-violet-500 px-4 py-1 font-semibold text-neutral-200 shadow transition-colors hover:bg-violet-400 text-xs"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      updateComment.mutate({
+                                        commentId: editComment.id,
+                                        comment: editComment.comment,
+                                      });
+                                      setEditComment(null);
+                                    }}
+                                  >
+                                    Submit
+                                    </div>
+                                    </div>
+                                    </div>
+                                    ) : (
+                                      <div>{comment.content}</div>
+                                    )}
+                          </div>
+                          {/* edit btn */}
+                          {!editComment && <div className="flex justify-end">
+                            {comment.authorId === user.id && (
+                              <div
+
+                                className="text-sm text-violet-400"
+                                onClick={() => {
+                                  setEditComment({
+                                    id: comment.id,
+                                    comment: comment.content,
+                                  });
+                                }}
+                              >
+                                Edit
+                                </div>
+                            )}
+                            </div>
+                  }
                         </div>
                       </div>
                     );
