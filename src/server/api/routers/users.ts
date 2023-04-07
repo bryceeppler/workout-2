@@ -210,7 +210,7 @@ export const usersRouter = createTRPCRouter({
   
       userActivities.forEach((activity) => {
   
-        if (activity.type === "cardio " && activity.value >= 15) {
+        if (activity.type === "cardio" && activity.value >= 15) {
           data[2] += 1;
         }
         if (activity.type === "stretch" && activity.value >= 10) {
