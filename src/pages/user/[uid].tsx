@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
-import {LoadingPage} from "~/components/loading";
+import { LoadingPage } from "~/components/loading";
 import { LoadingSpinner } from "~/components/loading";
 import SignInPage from "~/components/signin";
 import { getPointsForUser } from "..";
@@ -22,6 +22,15 @@ import type { CompletedWorkouts } from "~/pages/index";
 import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+} from "recharts";
 dayjs.extend(relativeTime);
 ChartJS.register(
   RadialLinearScale,
@@ -50,6 +59,13 @@ const User = () => {
     api.users.getPoints.useQuery();
   const { data: completedWorkouts, isLoading: completedWorkoutsLoading } =
     api.completedWorkouts.getAll.useQuery();
+
+  const { data: weightActivities, isLoading: weightActivitiesLoading } =
+    api.activities.getWeightActivitiesByUser.useQuery({
+      userId: uid as string,
+    });
+
+  console.log(weightActivities);
   const data = {
     labels: ["Meals", "Stretch", "Cardio", "Workouts", "Cold Plunge"],
     datasets: [
@@ -76,6 +92,16 @@ const User = () => {
   const mealsTracked = userActivity
     ?.filter((activity) => activity.type === "meal")
     .reduce((acc, activity) => acc + activity.value, 0);
+
+  const dummyLineData = [
+    { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
+    { name: "Page B", uv: 300, pv: 1398, amt: 2210 },
+    { name: "Page C", uv: 200, pv: 9800, amt: 2290 },
+    { name: "Page D", uv: 278, pv: 3908, amt: 2000 },
+    { name: "Page E", uv: 189, pv: 4800, amt: 2181 },
+    { name: "Page F", uv: 239, pv: 3800, amt: 2500 },
+    { name: "Page G", uv: 349, pv: 4300, amt: 2100 },
+  ];
 
   const numCompletedWorkouts = completedWorkouts?.filter((workout) => {
     console.log(workout);
@@ -105,11 +131,6 @@ const User = () => {
 
   return (
     <>
-      <Head>
-        <title>Gym App 2</title>
-        <meta name="description" content="Brycey boys website" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <main className="flex h-screen justify-center">
         <div className="h-full w-full md:max-w-2xl">
           <div className="flex border-b border-neutral-600 p-4">
@@ -135,14 +156,12 @@ const User = () => {
           </div>
           <div className="mx-3 flex flex-col">
             <div className="mt-5 flex flex-col gap-3">
-              <div className="mx-auto mb-5 flex w-full max-w-sm flex-col gap-2 text-sm bg-neutral-800 p-4">
+              <div className="mx-auto mb-5 flex w-full max-w-sm flex-col gap-2 bg-neutral-800 p-4 text-sm">
                 <div>
-                <div className="text-lg font-bold">
-                  Statistics
-                </div>
-                <div className="font-mono text-violet-300">
-                  {pointsForUser} total points
-                </div>
+                  <div className="text-lg font-bold">Statistics</div>
+                  <div className="font-mono text-violet-300">
+                    {pointsForUser} total points
+                  </div>
                 </div>
                 <div className="flex justify-between border-b border-neutral-600 pb-2">
                   <div>Completed workouts</div>
@@ -225,6 +244,43 @@ const User = () => {
                     />
                   </div>
                 )
+              )}
+              {weightActivities && (
+                <div>
+                  <div className="mx-auto flex w-full justify-center text-xl font-semibold text-white">
+                    Weight
+                  </div>
+                  <ResponsiveContainer width="100%" height={350}>
+                    <LineChart data={weightActivities}>
+                      <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                      <CartesianGrid stroke="#ccc" />
+                      <XAxis
+                        dataKey="createdAt"
+                        tickFormatter={(time) => {
+                          return dayjs(time as Date).format("MMM DD");
+                        }}
+                      />
+                      <YAxis
+                        tickFormatter={(value) => {
+                          return `${value as string} lbs`;
+                        }}
+                        // domain starts at 100 and goes to 10 above the max value
+                        domain={[100, "dataMax"]}
+                      />{" "}
+                      <RechartsTooltip
+                        labelFormatter={(label: Date) =>
+                          dayjs(label).format("MMM DD")
+                        }
+                        labelStyle={{
+                          color: "white",
+                        }}
+                        contentStyle={{
+                          backgroundColor: "black",
+                        }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
               )}
               {points && completedWorkouts && (
                 <div className="mx-auto my-5 flex flex-col justify-center">

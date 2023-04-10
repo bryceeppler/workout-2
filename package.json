@@ -24,6 +24,7 @@
     "react-charts": "^3.0.0-beta.54",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
+    "recharts": "^2.5.0",
     "superjson": "1.12.2",
     "zod": "^3.21.4"
   },

@@ -18,29 +18,43 @@ export const activitiesRouter = createTRPCRouter({
     const users = await clerkClient.users.getUserList();
     const completedWorkouts = await ctx.prisma.completedWorkout.findMany();
     const completedActivities = await ctx.prisma.activity.findMany();
-
   }),
-  addActivity: publicProcedure.input(z.object({ userId: z.string(), activity: z.string(), value: z.number() })).mutation(async ({ ctx, input }) => {
-    try{
-    const activity = await ctx.prisma.activity.create({
-      data: {
-        authorId: input.userId,
-        type: input.activity,
-        value: input.value,
-      },
-    });
-  } catch (e) {
-    console.log(e);
-  }
-  }),
-  getByUser:  publicProcedure.input(z.object({ userId: z.string() })).query(async ({ ctx, input }) => {
-    const activities = await ctx.prisma.activity.findMany({
-      where: {
-        authorId: input.userId,
-      },
-    });
-    return activities;
-  }
-  ),
+  addActivity: publicProcedure
+    .input(
+      z.object({ userId: z.string(), activity: z.string(), value: z.number() })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const activity = await ctx.prisma.activity.create({
+          data: {
+            authorId: input.userId,
+            type: input.activity,
+            value: input.value,
+          },
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }),
+  getByUser: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const activities = await ctx.prisma.activity.findMany({
+        where: {
+          authorId: input.userId,
+        },
+      });
+      return activities;
+    }),
+  getWeightActivitiesByUser: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const activities = await ctx.prisma.activity.findMany({
+        where: {
+          authorId: input.userId,
+          type: "weight",
+        },
+      });
+      return activities;
+    }),
 });
-
