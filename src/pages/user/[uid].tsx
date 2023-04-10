@@ -2,7 +2,8 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
-import LoadingSpinner, { LoadingPage } from "~/components/loading";
+import {LoadingPage} from "~/components/loading";
+import { LoadingSpinner } from "~/components/loading";
 import SignInPage from "~/components/signin";
 import { getPointsForUser } from "..";
 

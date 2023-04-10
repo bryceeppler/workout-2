@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
-import LoadingSpinner, { LoadingPage } from "~/components/loading";
+import { LoadingPage, LoadingSpinner} from "~/components/loading";
 import SignInPage from "~/components/signin";
 import { useState } from "react";
 import Link from "next/link";
