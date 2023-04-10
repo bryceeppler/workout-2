@@ -22,6 +22,10 @@ function preprocessActivities(activities: Activity[]) {
   const combinedActivities: Activity[] = [];
 
   activities.forEach((activity) => {
+    if (activity.type === "weight") {
+      combinedActivities.push(activity);
+      return;
+    }
     const date = getDateString(activity.createdAt);
     const existingActivity = combinedActivities.find(
       (a) =>
@@ -105,13 +109,15 @@ function calculateStreak(
   activities: Activity[]
 ) {
   // Filter the completedWorkouts and activities based on the conditions
-  const validWorkouts = completedWorkouts.filter(workout => workout.status === 'completed');
-  const validActivities = activities.filter(activity => {
-    if (activity.type === 'meal') {
+  const validWorkouts = completedWorkouts.filter(
+    (workout) => workout.status === "completed"
+  );
+  const validActivities = activities.filter((activity) => {
+    if (activity.type === "meal") {
       return activity.value > 3;
-    } else if (activity.type === 'cardio') {
+    } else if (activity.type === "cardio") {
       return activity.value >= 15;
-    } else if (activity.type === 'stretch') {
+    } else if (activity.type === "stretch") {
       return activity.value >= 10;
     }
     return true;
@@ -155,7 +161,6 @@ function calculateStreak(
 
   return streak;
 }
-
 
 function filterUserData(users: User[]) {
   return users.map((user) => {
@@ -236,7 +241,6 @@ export const usersRouter = createTRPCRouter({
       };
     });
     return usersWithStreak;
-  
   }),
 
   getUserInfo: publicProcedure
@@ -244,7 +248,7 @@ export const usersRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const user = await clerkClient.users.getUser(input.userId);
       const filteredUser = filterUserData([user])[0];
-      return filteredUser; 
+      return filteredUser;
     }),
 
   getUserSpiderChart: publicProcedure
@@ -382,6 +386,15 @@ export const usersRouter = createTRPCRouter({
           message: `${user.firstName || ""} completed ${
             activity.value || 0
           } meals.`,
+        });
+      }
+      if (activity.type === "weight") {
+        feed.push({
+          date: activity.createdAt,
+          type: "weight",
+          message: `${user.firstName || ""} weighed ${
+            activity.value || 0
+          } lbs.`,
         });
       }
     });
