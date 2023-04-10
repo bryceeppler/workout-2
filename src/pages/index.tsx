@@ -6,8 +6,8 @@ import type { RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import Link from "next/link";
-import {LoadingPage} from "~/components/loading";
-import {LoadingSpinner} from "~/components/loading";
+import { LoadingPage } from "~/components/loading";
+import { LoadingSpinner } from "~/components/loading";
 import SignInPage from "~/components/signin";
 import { useState } from "react";
 import CloseButton from "~/components/closebutton";
@@ -103,9 +103,9 @@ const ActivityModal = ({
         <div className="mt-6 flex flex-col gap-3">
           <div className="text-sm font-bold">Choose your activity</div>
 
-          <div className="flex flex-grow gap-1">
+          <div className="mx-auto flex flex-row flex-wrap items-center justify-center gap-1">
             <div
-              className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
+              className={`w-36 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "meal"
                   ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
                   : "bg-neutral-800 text-neutral-400"
@@ -116,7 +116,7 @@ const ActivityModal = ({
             </div>
             {/* cardio */}
             <div
-              className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
+              className={`w-36 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "cardio"
                   ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
                   : "bg-neutral-800 text-neutral-400"
@@ -128,7 +128,7 @@ const ActivityModal = ({
 
             {/* stretch */}
             <div
-              className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
+              className={`w-36 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "stretch"
                   ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
                   : "bg-neutral-800 text-neutral-400"
@@ -140,7 +140,7 @@ const ActivityModal = ({
 
             {/* cold plunge */}
             <div
-              className={`w-40 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
+              className={`w-36 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
                 selectedActivity === "cold plunge"
                   ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
                   : "bg-neutral-800 text-neutral-400"
@@ -149,10 +149,25 @@ const ActivityModal = ({
             >
               Cold Plunge
             </div>
+            {/* Weight */}
+            <div
+              className={`w-36 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
+                selectedActivity === "weight"
+                  ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
+                  : "bg-neutral-800 text-neutral-400"
+              }`}
+              onClick={() => setSelectedActivity("weight")}
+            >
+              Weight
+            </div>
           </div>
 
           <div className="mt-5 text-sm font-bold">
-            {selectedActivity === "meal" ? "Number of meals" : "Minutes"}
+            {selectedActivity === "meal"
+              ? "Number of meals"
+              : selectedActivity === "weight"
+              ? "Pounds"
+              : "Minutes"}
           </div>
           <div className="">
             <input
@@ -200,7 +215,7 @@ const flameIcon = () => (
   </svg>
 );
 type UserInfo = RouterOutputs["users"]["getAllUserInfo"][number];
-const AddActivityWizard = (props: {userDetails?: UserInfo}) => {
+const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
   const { user } = useUser();
   const [modalOpen, setModalOpen] = useState(false);
   const showToast = () => {
@@ -230,10 +245,11 @@ const AddActivityWizard = (props: {userDetails?: UserInfo}) => {
             <div className="">{user.firstName}</div>
             <div className="flex flex-row items-center gap-1">
               {flameIcon()}
-              <div className="text-sm text-neutral-400">{props.userDetails?.streak} day streak</div>
+              <div className="text-sm text-neutral-400">
+                {props.userDetails?.streak} day streak
+              </div>
             </div>
             {/* <div className="text-xs text-neutral-400">{9} points</div> */}
-
           </div>
         </div>
         <div
@@ -318,7 +334,7 @@ const ProgressView = (props: {
               {getPointsForUser(userId, props.points)} Points
             </div>
             {/* streak */}
-            <div className="flex flex-row items-center gap-1 mb-2">
+            <div className="mb-2 flex flex-row items-center gap-1">
               {flameIcon()}
               <div className="text-sm text-neutral-400">
                 {props.usersDetails.find((user) => user.id === userId)?.streak}{" "}
@@ -467,25 +483,25 @@ const Home: NextPage = () => {
         <div className="h-full w-full md:max-w-2xl">
           <div className="flex border-b border-neutral-600 p-4">
             <div className="flex w-full flex-col justify-between ">
-              {usersData &&   <AddActivityWizard
-    userDetails={
-      usersData?.find(
-        (userDetails) => userDetails.id === user?.id
-      ) || {
-        streak: 0,
-        id: "",
-        firstName: null,
-        lastName: null,
-        emailAddresses: [],
-        profileImageUrl: "",
-        createdAt: 0,
-        updatedAt: 0,
-        username: null,
-      }
-    }
-  />
-}
-
+              {usersData && (
+                <AddActivityWizard
+                  userDetails={
+                    usersData?.find(
+                      (userDetails) => userDetails.id === user?.id
+                    ) || {
+                      streak: 0,
+                      id: "",
+                      firstName: null,
+                      lastName: null,
+                      emailAddresses: [],
+                      profileImageUrl: "",
+                      createdAt: 0,
+                      updatedAt: 0,
+                      username: null,
+                    }
+                  }
+                />
+              )}
             </div>
           </div>
           <div className="mx-3 flex flex-col gap-3">
