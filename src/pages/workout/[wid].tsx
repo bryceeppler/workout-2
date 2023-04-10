@@ -233,7 +233,8 @@ const Workout = () => {
                             {editComment && editComment.id === comment.id ? (
                               <div className="flex flex-col gap-3">
                                 <textarea
-                                  rows={8}
+                                  // rows={8}
+                                  rows={comment.content.split("\n").length}
                                   placeholder="Add a comment"
                                   value={editComment.comment}
                                   onChange={(e) => {
