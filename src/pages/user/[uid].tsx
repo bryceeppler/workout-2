@@ -247,11 +247,14 @@ const User = () => {
               )}
               {weightActivities && (
                 <div>
-                  <div className="mx-auto flex w-full justify-center text-xl font-semibold text-white">
+                  <div className="mx-auto mb-2 flex w-full text-xl font-semibold text-violet-400">
                     Weight
                   </div>
                   <ResponsiveContainer width="100%" height={250}>
-                    <LineChart data={weightActivities}>
+                    <LineChart
+                      data={weightActivities}
+                      margin={{ top: 20, right: 0, left: 5, bottom: 5 }}
+                    >
                       <Line type="monotone" dataKey="value" stroke="#8884d8" />
                       <CartesianGrid stroke="#ccc" />
                       <XAxis
@@ -262,7 +265,7 @@ const User = () => {
                       />
                       <YAxis
                         tickFormatter={(value) => {
-                          return `${value as string} lbs`;
+                          return `${String(Math.floor(value as number))} lbs`;
                         }}
                         // domain starts at 100 and goes to 10 above the max value
                         domain={[100, "dataMax"]}
@@ -294,7 +297,7 @@ const User = () => {
                 </div>
               )}
               {/* Completed workout histroy */}
-              <div>
+              <div className="mb-10">
                 <h2 className="my-2 text-xl font-bold text-violet-400">
                   History
                 </h2>
