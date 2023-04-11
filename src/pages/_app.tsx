@@ -11,17 +11,16 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
       <Component {...pageProps} />
-      <Toaster 
-      toastOptions={{
-        className: '',
-        position: 'bottom-center',
-        style: {
-          color: 'white',
-          background: '#44403c',
-          border: '1px solid #8b5cf6',
-
-        },
-      }}
+      <Toaster
+        toastOptions={{
+          className: "",
+          position: "top-center",
+          style: {
+            color: "white",
+            background: "#44403c",
+            border: "1px solid #8b5cf6",
+          },
+        }}
       />
     </ClerkProvider>
   );

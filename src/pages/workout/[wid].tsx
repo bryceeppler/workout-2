@@ -206,7 +206,7 @@ const Workout = () => {
                 </div>
 
                 {/* comments */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-10">
                   {sortedComments?.map((comment) => {
                     return (
                       <div className="flex gap-3" key={comment.id}>
@@ -234,6 +234,24 @@ const Workout = () => {
                               {dayjs(comment.createdAt).fromNow()}
                             </div>
                           </div>
+                          {/* edit btn */}
+                          {!editComment && (
+                            <div className="my-1 flex justify-end">
+                              {comment.authorId === user.id && (
+                                <div
+                                  className="rounded border border-violet-400 p-1 text-xs text-violet-400"
+                                  onClick={() => {
+                                    setEditComment({
+                                      id: comment.id,
+                                      comment: comment.content,
+                                    });
+                                  }}
+                                >
+                                  Edit
+                                </div>
+                              )}
+                            </div>
+                          )}
                           <div className="whitespace-pre-wrap text-sm">
                             {editComment && editComment.id === comment.id ? (
                               <div className="flex flex-col gap-3">
@@ -295,24 +313,6 @@ const Workout = () => {
                               <div>{comment.content}</div>
                             )}
                           </div>
-                          {/* edit btn */}
-                          {!editComment && (
-                            <div className="flex justify-end">
-                              {comment.authorId === user.id && (
-                                <div
-                                  className="text-sm text-violet-400"
-                                  onClick={() => {
-                                    setEditComment({
-                                      id: comment.id,
-                                      comment: comment.content,
-                                    });
-                                  }}
-                                >
-                                  Edit
-                                </div>
-                              )}
-                            </div>
-                          )}
                         </div>
                       </div>
                     );
