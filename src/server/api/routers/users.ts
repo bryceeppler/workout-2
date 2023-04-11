@@ -318,7 +318,8 @@ export const usersRouter = createTRPCRouter({
       },
     });
     const completedActivities = await ctx.prisma.activity.findMany();
-    const combinedActivities = preprocessActivities(completedActivities);
+    // const combinedActivities = preprocessActivities(completedActivities);
+    const combinedActivities = completedActivities;
     console.log(`Number of completed workouts: ${completedWorkouts.length}`);
     console.log(`Number of combined activities: ${combinedActivities.length}`);
     const users = await clerkClient.users.getUserList();
