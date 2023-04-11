@@ -3,11 +3,16 @@ import { type User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
 import { type Activity, type CompletedWorkout } from "@prisma/client";
 import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/en";
+dayjs.extend(relativeTime);
+dayjs.locale("en");
+
 // Helper function to get the date string from a Date object
 function getDateString(date: Date): string {
-  return date.toISOString()?.split("T")[0] ?? "";
+  return dayjs(date).format("YYYY-MM-DD");
 }
 interface UserPoints {
   [userId: string]: number;
