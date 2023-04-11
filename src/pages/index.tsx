@@ -9,7 +9,7 @@ import Link from "next/link";
 import { LoadingPage } from "~/components/loading";
 import { LoadingSpinner } from "~/components/loading";
 import SignInPage from "~/components/signin";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CloseButton from "~/components/closebutton";
 import toast from "react-hot-toast";
 import { type Dispatch, type SetStateAction } from "react";
@@ -242,10 +242,10 @@ const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
             height={56}
           />
           <div className="flex flex-col">
-            <div className="">{user.firstName}</div>
+            <div className="text-lg font-semibold">{user.firstName}</div>
             <div className="flex flex-row items-center gap-1">
               {flameIcon()}
-              <div className="text-sm text-neutral-400">
+              <div className="mt-1 text-sm text-neutral-400">
                 {props.userDetails?.streak} day streak
               </div>
             </div>
@@ -280,7 +280,7 @@ const UpcomingWorkoutsView = (props: { workouts: Workout[] }) => {
   const { workouts } = props;
   return (
     <div className="mt-5 flex flex-col gap-3">
-      <div className="text-xl font-bold">Upcoming Workouts</div>
+      <div className="text-2xl font-bold">Upcoming Workouts</div>
       {workouts?.map((workout) => (
         <IncompleteWorkoutView key={workout.id} workout={workout} />
       ))}
@@ -320,7 +320,7 @@ const ProgressView = (props: {
 
   return (
     <div className="mt-5 flex flex-col gap-3">
-      <div className="text-xl font-bold">Progress</div>
+      <div className="text-2xl font-bold">Progress</div>
       <div className="rounded border border-neutral-600 p-4">
         {users.map((userId) => (
           <div key={userId} className="mb-4">
@@ -382,12 +382,12 @@ const LeaderboardView = (props: {
 
   return (
     <div className="mt-5 flex w-full flex-col text-left">
-      <div className="text-xl font-bold text-white">Leaderboard</div>
+      <div className="text-2xl font-bold text-white">Leaderboard</div>
       <div className="mt-3 flex flex-col gap-3">
         {pointsArrToReturn.map((user) => (
           <Link
             key={user.userId}
-            className="flex h-16 w-full flex-row items-center rounded p-2 text-white hover:border hover:border-violet-500 hover:bg-black"
+            className="flex h-16 w-full flex-row items-center rounded text-white hover:border hover:border-violet-500 hover:bg-black"
             href={`/user/${user.userId}`}
           >
             <Image
@@ -403,15 +403,20 @@ const LeaderboardView = (props: {
               className="bg-base mr-3 rounded-full"
             />
             <div className="flex w-full flex-col">
-              <div
-                //  cap the user id at 20 chars
-                className="truncate font-semibold"
-              >
-                {
-                  props.usersDetails.find(
-                    (userDetails) => userDetails.id === user.userId
-                  )?.firstName
-                }
+              <div className="flex w-full flex-row items-center justify-between">
+                <div
+                  //  cap the user id at 20 chars
+                  className="mb-1 ml-0.5 truncate text-lg font-semibold"
+                >
+                  {
+                    props.usersDetails.find(
+                      (userDetails) => userDetails.id === user.userId
+                    )?.firstName
+                  }
+                </div>
+                {/* <div className="text-xs text-neutral-400 mr-0.5">
+                  {user.totalPoints} Points
+                </div> */}
               </div>
               {/* Black background bar */}
               <div className="flex h-4 w-full flex-row items-center rounded-full bg-black">
@@ -460,10 +465,22 @@ const Home: NextPage = () => {
       }
     );
   const { data: feedData, isLoading: feedLoading } =
-    api.users.getActivityFeed.useQuery();
-  console.log(usersData);
+    api.users.getActivityFeed.useQuery(undefined, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+    });
+
   const { data: completedWorkouts, isLoading: completedWorkoutsLoading } =
     api.completedWorkouts.getAll.useQuery();
+
+  const [showAllFeedData, setShowAllFeedData] = useState(false);
+
+  // useEffect(() => {
+  //   if (feedData) {
+  //     setDisplayedFeedData(feedData.slice(0, 5));
+  //   }
+  // }, [feedData]);
 
   if (!userLoaded) return <LoadingPage />;
 
@@ -525,27 +542,49 @@ const Home: NextPage = () => {
                 <LoadingSpinner />
               </div>
             )}
-            <div className="mt-5 flex flex-col gap-3">
-              <div className="text-xl font-bold">Activity Feed</div>
-              {!feedLoading &&
-                feedData &&
-                feedData.map((feedItem, i) => {
-                  return (
+            <div className="mt-5 flex flex-col">
+              <div className="text-2xl font-bold">Recent Activity</div>
+              <div>
+                {!feedLoading && feedData && (
+                  <div className="flex flex-col">
+                    {!showAllFeedData
+                      ? feedData.slice(0, 5).map((feedItem, i) => {
+                          return (
+                            <div
+                              key={i}
+                              className="border-b border-neutral-600 p-2"
+                            >
+                              <div className="text-sm">{feedItem.message}</div>
+                              <div className="text-xs text-neutral-400">
+                                {dayjs(feedItem.date).fromNow()}
+                              </div>
+                            </div>
+                          );
+                        })
+                      : feedData.map((feedItem, i) => {
+                          return (
+                            <div
+                              key={i}
+                              className="border-b border-neutral-600 p-2"
+                            >
+                              <div className="text-sm">{feedItem.message}</div>
+                              <div className="text-xs text-neutral-400">
+                                {dayjs(feedItem.date).fromNow()}
+                              </div>
+                            </div>
+                          );
+                        })}
                     <div
-                      key={i}
-                      className="rounded border border-neutral-600 p-2"
+                      className="mx-auto mt-3 cursor-pointer text-sm text-violet-500"
+                      onClick={() => setShowAllFeedData(!showAllFeedData)}
                     >
-                      <div className="text-sm">{feedItem.message}</div>
-                      <div className="text-xs text-neutral-400">
-                        {/* dayjs to say how long ago
-                         */}
-                        {dayjs(feedItem.date).fromNow()}
-                      </div>
+                      {showAllFeedData ? "Show less" : "View all"}
                     </div>
-                  );
-                })}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="mt-10 flex justify-center">
+            <div className="my-10 flex justify-center rounded border border-violet-500 py-1">
               <SignOutButton />
             </div>
           </div>
