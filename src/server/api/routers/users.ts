@@ -410,6 +410,15 @@ export const usersRouter = createTRPCRouter({
           } lbs.`,
         });
       }
+      if (activity.type === "water") {
+        feed.push({
+          date: activity.createdAt,
+          type: "water",
+          message: `${user.firstName || ""} drank ${
+            activity.value || 0
+          } mL of water.`,
+        });
+      }
     });
     feed.sort((a, b) => {
       return new Date(b.date) - new Date(a.date);

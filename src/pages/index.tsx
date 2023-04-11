@@ -160,6 +160,17 @@ const ActivityModal = ({
             >
               Weight
             </div>
+            {/* Water */}
+            <div
+              className={`w-36 rounded border border-neutral-600 py-2 text-center text-xs hover:bg-neutral-700 ${
+                selectedActivity === "water"
+                  ? "bg-violet-500 text-neutral-200 hover:bg-violet-400"
+                  : "bg-neutral-800 text-neutral-400"
+              }`}
+              onClick={() => setSelectedActivity("water")}
+            >
+              Water
+            </div>
           </div>
 
           <div className="mt-5 text-sm font-bold">
@@ -167,6 +178,8 @@ const ActivityModal = ({
               ? "Number of meals"
               : selectedActivity === "weight"
               ? "Pounds"
+              : selectedActivity === "water"
+              ? "Water consumed (mL)"
               : "Minutes"}
           </div>
           <div className="">
