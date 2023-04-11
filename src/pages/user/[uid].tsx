@@ -72,8 +72,8 @@ const User = () => {
       {
         label: "# of Points",
         data: spiderChartData,
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(124, 58, 237, 0.4)",
+        borderColor: "rgba(124, 58, 237, 1)",
         borderWidth: 1,
       },
     ],
@@ -207,12 +207,12 @@ const User = () => {
                 <LoadingSpinner />
               ) : (
                 data && (
-                  <div className="flex h-64 w-full justify-center">
+                  <div className="flex h-64 w-full justify-center p-2">
                     <Radar
                       data={data}
                       options={{
                         responsive: true,
-                        // change line color to white
+                        // change radar chart color to green
                         scales: {
                           r: {
                             pointLabels: {
