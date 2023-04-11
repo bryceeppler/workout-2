@@ -71,4 +71,39 @@ export const activitiesRouter = createTRPCRouter({
 
       return activities;
     }),
+
+  getDailyWaterActivitiesByUser: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const activities = await ctx.prisma.activity.findMany({
+        where: {
+          authorId: input.userId,
+          type: "water",
+        },
+      });
+      // convert all dates to pst using dayjs
+      activities.forEach((activity) => {
+        activity.createdAt = dayjs(activity.createdAt)
+          .tz("America/Los_Angeles")
+          .toDate();
+      });
+      // filter out all activities that are not today
+      const today = dayjs().tz("America/Los_Angeles").startOf("day").toDate();
+      const filteredActivities = activities.filter((activity) => {
+        return dayjs(activity.createdAt).isSame(today, "day");
+      });
+
+      // sum up all the values
+      const total = filteredActivities.reduce((acc, activity) => {
+        return acc + activity.value;
+      }, 0);
+
+      const waterGoal = 4000;
+
+      return {
+        total,
+        goal: waterGoal,
+        percentage: (total / waterGoal) * 100,
+      };
+    }),
 });

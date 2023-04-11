@@ -254,6 +254,10 @@ const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
   const showToast = () => {
     toast("Activity added!");
   };
+  const { data: userWater, isLoading: userWaterLoading } =
+    api.activities.getDailyWaterActivitiesByUser.useQuery({
+      userId: String(user?.id),
+    });
   if (!user) return null;
 
   return (
@@ -288,11 +292,16 @@ const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
               <div className="flex h-4 w-full flex-row items-center rounded-full border border-sky-400 bg-black">
                 {/* Green progress bar */}
                 <div className="absolute translate-x-1/2 text-xs text-white">
-                  {2500}/{4000} mL
+                  {userWater?.total || 0}/{userWater?.goal || 4000} mL
                 </div>
                 <div
                   className="flex h-4 flex-row items-center rounded-full bg-sky-500"
-                  style={{ width: `${(25 / 30) * 100}%` }}
+                  style={{
+                    width: `${
+                      ((userWater?.total || 0) / (userWater?.goal || 4000)) *
+                      100
+                    }%`,
+                  }}
                 ></div>
               </div>
             </div>
