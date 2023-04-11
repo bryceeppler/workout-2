@@ -6,13 +6,20 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import "dayjs/locale/en";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(relativeTime);
-dayjs.locale("en");
+
+// dayjs(activity.createdAt)
+//           .tz("America/Los_Angeles")
+//           .toDate();
+//       });
 
 // Helper function to get the date string from a Date object
 function getDateString(date: Date): string {
-  return dayjs(date).format("YYYY-MM-DD");
+  return dayjs(date).tz("America/Los_Angeles").format("YYYY-MM-DD");
 }
 interface UserPoints {
   [userId: string]: number;
@@ -129,7 +136,7 @@ function calculateStreak(
   });
 
   let streak = 0;
-  const today = new Date();
+  const today = dayjs().tz("America/Los_Angeles").toDate();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
   const streakDay = new Date(yesterday);
