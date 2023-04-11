@@ -387,7 +387,7 @@ const LeaderboardView = (props: {
         {pointsArrToReturn.map((user) => (
           <Link
             key={user.userId}
-            className="flex h-16 w-full flex-row items-center rounded text-white hover:border hover:border-violet-500 hover:bg-black"
+            className="flex h-16 w-full flex-row items-center rounded text-white hover:text-violet-500"
             href={`/user/${user.userId}`}
           >
             <Image
