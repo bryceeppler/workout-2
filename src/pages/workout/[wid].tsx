@@ -188,9 +188,9 @@ const Workout = () => {
                     className="grow rounded border border-neutral-700 bg-transparent p-1 text-sm outline-none focus:border-violet-500"
                   ></textarea>
                 </div>
-                <div className="flex w-full justify-end p-4">
+                <div className="mb-10 flex w-full justify-end">
                   <div
-                    className="rounded border border-violet-400 bg-violet-500 px-4 py-2 font-semibold text-neutral-200 shadow transition-colors hover:bg-violet-400"
+                    className="rounded border border-violet-400 bg-violet-500 px-4 py-1 text-xs text-neutral-200 shadow transition-colors hover:bg-violet-400"
                     onClick={(e) => {
                       e.preventDefault();
                       createComment.mutate({
