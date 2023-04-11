@@ -250,7 +250,7 @@ const User = () => {
                   <div className="mx-auto flex w-full justify-center text-xl font-semibold text-white">
                     Weight
                   </div>
-                  <ResponsiveContainer width="100%" height={350}>
+                  <ResponsiveContainer width="100%" height={250}>
                     <LineChart data={weightActivities}>
                       <Line type="monotone" dataKey="value" stroke="#8884d8" />
                       <CartesianGrid stroke="#ccc" />

@@ -227,6 +227,26 @@ const flameIcon = () => (
     />
   </svg>
 );
+
+const waterIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M4.15854 9.5C5.15843 5.5 8.49187 3.66667 10.6585 2C10.6585 2 9.5 3.875 14.5 7C19.5 10.125 16.6585 17.5 10.6585 17.5C4.47388 17.5 3.55226 11.9254 4.15854 9.5Z"
+      strokeLinejoin="round"
+      className="fill-sky-400 stroke-sky-400"
+    />
+    <path
+      d="M6.14659 8C5.18323 8.831 3.93086 11.3905 6.62827 14.9804C9.32569 18.5704 7.43108 11.8226 6.14659 8Z"
+      fill="#D9D9D9"
+    />
+  </svg>
+);
 type UserInfo = RouterOutputs["users"]["getAllUserInfo"][number];
 const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
   const { user } = useUser();
@@ -245,8 +265,8 @@ const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
           userId={user.id}
         />
       )}
-      <div className="flex justify-between">
-        <div className="flex flex-row gap-3">
+      <div className="flex w-full">
+        <div className="flex w-full flex-row gap-3">
           <Image
             src={user.profileImageUrl}
             alt="Profile image"
@@ -254,7 +274,7 @@ const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
             width={56}
             height={56}
           />
-          <div className="flex flex-col">
+          <div className="flex w-full flex-col">
             <div className="text-lg font-semibold">{user.firstName}</div>
             <div className="flex flex-row items-center gap-1">
               {flameIcon()}
@@ -262,6 +282,21 @@ const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
                 {props.userDetails?.streak} day streak
               </div>
             </div>
+            <div className="flex w-full flex-row items-center gap-1">
+              {waterIcon()}
+              {/* Black background bar */}
+              <div className="flex h-4 w-full flex-row items-center rounded-full border border-sky-400 bg-black">
+                {/* Green progress bar */}
+                <div className="absolute translate-x-1/2 text-xs text-white">
+                  {2500}/{4000} mL
+                </div>
+                <div
+                  className="flex h-4 flex-row items-center rounded-full bg-sky-500"
+                  style={{ width: `${(25 / 30) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+
             {/* <div className="text-xs text-neutral-400">{9} points</div> */}
           </div>
         </div>
