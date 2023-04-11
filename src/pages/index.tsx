@@ -310,7 +310,7 @@ const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
           </div>
         </div>
         <div
-          className="my-auto cursor-pointer "
+          className="my-auto ml-4 cursor-pointer "
           onClick={() => setModalOpen(true)}
         >
           {plusButton()}
