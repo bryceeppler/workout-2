@@ -239,7 +239,7 @@ const waterIcon = () => (
     <path
       d="M4.15854 9.5C5.15843 5.5 8.49187 3.66667 10.6585 2C10.6585 2 9.5 3.875 14.5 7C19.5 10.125 16.6585 17.5 10.6585 17.5C4.47388 17.5 3.55226 11.9254 4.15854 9.5Z"
       strokeLinejoin="round"
-      className="fill-sky-400 stroke-sky-400"
+      className="fill-sky-600 stroke-sky-600"
     />
     <path
       d="M6.14659 8C5.18323 8.831 3.93086 11.3905 6.62827 14.9804C9.32569 18.5704 7.43108 11.8226 6.14659 8Z"
@@ -289,13 +289,13 @@ const AddActivityWizard = (props: { userDetails?: UserInfo }) => {
             <div className="flex w-full flex-row items-center gap-1">
               {waterIcon()}
               {/* Black background bar */}
-              <div className="flex h-4 w-full flex-row items-center rounded-full border border-sky-400 bg-black">
+              <div className="relative flex h-4 w-full flex-row items-center rounded-full border border-sky-600 bg-black">
                 {/* Green progress bar */}
-                <div className="absolute translate-x-1/2 text-xs text-white">
+                <div className="absolute flex w-full justify-center text-xs font-semibold text-white">
                   {userWater?.total || 0}/{userWater?.goal || 4000} mL
                 </div>
                 <div
-                  className="flex h-4 flex-row items-center rounded-full bg-sky-500"
+                  className="flex h-4 flex-row items-center rounded-full bg-sky-600"
                   style={{
                     width: `${
                       ((userWater?.total || 0) / (userWater?.goal || 4000)) *
