@@ -78,8 +78,8 @@ export const activitiesRouter = createTRPCRouter({
   getDailyWaterActivitiesByUser: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      console.log("getDailyWaterActivitiesByUser");
-      console.log("userId", input.userId);
+      // console.log("getDailyWaterActivitiesByUser");
+      // console.log("userId", input.userId);
       const activities = await ctx.prisma.activity.findMany({
         where: {
           authorId: input.userId,
