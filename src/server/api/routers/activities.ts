@@ -76,6 +76,8 @@ export const activitiesRouter = createTRPCRouter({
   getDailyWaterActivitiesByUser: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
+      console.log("getDailyWaterActivitiesByUser");
+      console.log("userId", input.userId);
       const activities = await ctx.prisma.activity.findMany({
         where: {
           authorId: input.userId,
@@ -83,22 +85,20 @@ export const activitiesRouter = createTRPCRouter({
         },
       });
       // convert all dates to pst using dayjs
+      console.log("activities", activities);
       activities.forEach((activity) => {
         activity.createdAt = dayjs(activity.createdAt)
           .utc()
           .tz("America/Los_Angeles")
           .toDate();
       });
+      console.log("activities after conversion", activities);
       // filter out all activities that are not today
-      const today = dayjs()
-        .utc()
-        .tz("America/Los_Angeles")
-        .startOf("day")
-        .toDate();
+      const today = dayjs().tz("America/Los_Angeles").startOf("day").toDate();
       const filteredActivities = activities.filter((activity) => {
         return dayjs(activity.createdAt).isSame(today, "day");
       });
-
+      console.log("filteredActivities", filteredActivities);
       // sum up all the values
       const total = filteredActivities.reduce((acc, activity) => {
         return acc + activity.value;
