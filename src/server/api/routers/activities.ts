@@ -9,7 +9,9 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(relativeTime);
-
+function getDateString(date: Date): string {
+  return dayjs(date).tz("America/Los_Angeles").format("YYYY-MM-DD");
+}
 export const activitiesRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
@@ -84,35 +86,16 @@ export const activitiesRouter = createTRPCRouter({
           type: "water",
         },
       });
-      // convert all dates to pst using dayjs
-      console.log("activities", activities);
-      const updatedActivities =
-        activities.map((activity) => {
-          activity.createdAt = dayjs(activity.createdAt)
-            .utc()
-            .tz("America/Los_Angeles")
-            .toDate();
-          return activity;
-        }) || [];
-      console.log("updatedActivities", updatedActivities);
-
-      // activities.forEach((activity) => {
-      //   activity.createdAt = dayjs(activity.createdAt)
-      //     .utc()
-      //     .tz("America/Los_Angeles")
-      //     .toDate();
-      // });
-      console.log("activities after conversion", updatedActivities);
-      // filter out all activities that are not today
-      const today = dayjs().tz("America/Los_Angeles").startOf("day").toDate();
-      const filteredActivities = updatedActivities.filter((activity) => {
-        return dayjs(activity.createdAt).isSame(today, "day");
-      });
-      console.log("filteredActivities", filteredActivities);
+      // filter activities by checking date using getDateString
       // sum up all the values
-      const total = filteredActivities.reduce((acc, activity) => {
-        return acc + activity.value;
-      }, 0);
+      let total = 0;
+      for (const activity of activities) {
+        const dateString = getDateString(activity.createdAt);
+        const today = getDateString(new Date());
+        if (dateString === today) {
+          total += activity.value;
+        }
+      }
 
       const waterGoal = 4000;
 
