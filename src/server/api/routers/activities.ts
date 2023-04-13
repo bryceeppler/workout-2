@@ -65,6 +65,7 @@ export const activitiesRouter = createTRPCRouter({
       // convert all dates to pst using dayjs
       activities.forEach((activity) => {
         activity.createdAt = dayjs(activity.createdAt)
+          .utc()
           .tz("America/Los_Angeles")
           .toDate();
       });
@@ -84,11 +85,16 @@ export const activitiesRouter = createTRPCRouter({
       // convert all dates to pst using dayjs
       activities.forEach((activity) => {
         activity.createdAt = dayjs(activity.createdAt)
+          .utc()
           .tz("America/Los_Angeles")
           .toDate();
       });
       // filter out all activities that are not today
-      const today = dayjs().tz("America/Los_Angeles").startOf("day").toDate();
+      const today = dayjs()
+        .utc()
+        .tz("America/Los_Angeles")
+        .startOf("day")
+        .toDate();
       const filteredActivities = activities.filter((activity) => {
         return dayjs(activity.createdAt).isSame(today, "day");
       });
