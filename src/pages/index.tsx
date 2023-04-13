@@ -16,11 +16,14 @@ import { type Dispatch, type SetStateAction } from "react";
 import UserHeatmap from "~/components/userHeatmap";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(relativeTime);
 
 export function getDateString(date: Date): string {
-  return date.toISOString()?.split("T")[0] ?? "";
+  return dayjs(date).tz("America/Los_Angeles").format("YYYY-MM-DD");
 }
 interface TooltipProps {
   content: string;
